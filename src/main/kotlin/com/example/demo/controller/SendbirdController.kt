@@ -1,5 +1,6 @@
-package com.example.demo
+package com.example.demo.controller
 
+import com.example.demo.service.SendbirdService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 

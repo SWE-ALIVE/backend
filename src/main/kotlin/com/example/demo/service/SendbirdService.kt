@@ -1,4 +1,4 @@
-package com.example.demo
+package com.example.demo.service
 
 import com.example.demo.config.SendbirdConfig
 import org.slf4j.LoggerFactory
