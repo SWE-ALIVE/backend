@@ -4,19 +4,20 @@ import jakarta.persistence.*
 import java.util.UUID
 
 @Entity
-@Table(name = "chatRoomDevice")
+@Table(name = "chat_room_device")
 data class ChatRoomDevice(
     @Id
-    val id: UUID = UUID.randomUUID(),
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    val id: UUID,
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "chatroom_id", referencedColumnName = "id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
+    @JoinColumn(name = "chatroom_id", nullable = false)
     val chatRoom: ChatRoom,
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "device_id", referencedColumnName = "id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
+    @JoinColumn(name = "device_id", nullable = false)
     val device: Device,
 
-    @Column(name = "device_status", nullable = false)
+    @Column(nullable = false)
     val deviceStatus: Boolean
 )

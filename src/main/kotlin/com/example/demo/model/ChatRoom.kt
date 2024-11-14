@@ -5,19 +5,22 @@ import jakarta.validation.constraints.Size
 import java.util.UUID
 
 @Entity
-@Table(name = "chatRoom")
+@Table(name = "chat_room")
 data class ChatRoom(
     @Id
-    val id: UUID = UUID.randomUUID(),
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    val id: UUID,
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
+    @JoinColumn(name = "user_id", nullable = false)
     val user: User,
 
     @Column(nullable = false)
-    @Size(max = 10, message = "방이름은 최대 10글자까지 가능합니다.")
     val name: String,
 
     @OneToMany(mappedBy = "chatRoom", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
-    val chatRoomDevices: List<ChatRoomDevice> = mutableListOf()
+    val chats: MutableList<Chat> = mutableListOf(),
+
+    @OneToMany(mappedBy = "chatRoom", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
+    val chatRoomDevices: MutableList<ChatRoomDevice> = mutableListOf()
 )
