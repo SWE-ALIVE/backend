@@ -1,4 +1,4 @@
-package com.example.demo.Model
+package com.example.demo.model
 
 enum class DeviceCategory {
     WASHING_MACHINE,      // 세탁기
