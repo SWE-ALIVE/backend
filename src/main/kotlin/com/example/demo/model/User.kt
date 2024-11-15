@@ -3,6 +3,10 @@ package com.example.demo.model
 import jakarta.persistence.*
 import jakarta.validation.constraints.Pattern
 import jakarta.validation.constraints.Size
+import main.kotlin.com.example.demo.model.UserDevice
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.LocalDateTime.*
 import java.time.LocalTime
 import java.util.*
 
@@ -10,7 +14,8 @@ import java.util.*
 @Table(name = "user")
 data class User(
     @Id
-    val id: UUID = UUID.randomUUID(),
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    val id: UUID,
 
     @Column(nullable = false)
     @Size(max = 10, message = "이름은 최대 10글자까지 가능합니다.")
@@ -24,18 +29,18 @@ data class User(
     )
     val password: String,
 
-    @Column(name = "birth_date", nullable = false)
+    @Column(nullable = false)
     val birthDate: LocalTime,
 
-    @Column(name = "phone_number", nullable = false)
+    @Column(nullable = false, unique = true)
     val phoneNumber: String,
 
-    // 나의 채팅방 목록만 뽑아 올 수 있음.
-    @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
-    val chatRooms: List<ChatRoom> = mutableListOf(),
+    @Column(nullable = false)
+    val createdAt: LocalDateTime = now(),
 
-    // 활동 내역만 뽑아 올 수 있음.
     @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
-    val calendars: List<Calendar> = mutableListOf()
+    val userDevices: MutableList<UserDevice> = mutableListOf(),
 
+    @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
+    val chatRooms: MutableList<ChatRoom> = mutableListOf()
 )

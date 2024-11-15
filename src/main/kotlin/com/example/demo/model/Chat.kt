@@ -8,14 +8,16 @@ import java.util.UUID
 @Table(name = "chat")
 data class Chat(
     @Id
-    val id: UUID = UUID.randomUUID(),
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    val id: UUID,
 
-    @Column(name = "chatroom_id", nullable = false)
-    val chatRoomId: UUID,
+    @ManyToOne(fetch = FetchType.LAZY , cascade = [CascadeType.ALL])
+    @JoinColumn(name = "chatroom_id", nullable = false)
+    val chatRoom: ChatRoom,
 
     @Column(nullable = false)
     val content: String,
 
-    @Column(name = "created_at", nullable = false)
-    val createdAt: LocalDateTime
+    @Column(nullable = false)
+    val createdAt: LocalDateTime = LocalDateTime.now()
 )

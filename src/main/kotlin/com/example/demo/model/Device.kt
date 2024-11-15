@@ -1,6 +1,7 @@
 package com.example.demo.model
 
 import jakarta.persistence.*
+import main.kotlin.com.example.demo.model.UserDevice
 import java.time.LocalDateTime
 import java.util.UUID
 
@@ -8,22 +9,25 @@ import java.util.UUID
 @Table(name = "device")
 data class Device(
     @Id
-    val id: UUID = UUID.randomUUID(),
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    val id: UUID,
 
-    @Column(name = "product_number", nullable = false)
+    @Column(nullable = false)
     val productNumber: String,
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     val category: DeviceCategory,
 
-    @Column(name = "extra_function")
+    @Column(nullable = false)
     val extraFunction: String,
 
-    @Column(name = "created_at", nullable = false)
-    val createdAt: LocalDateTime,
+    @Column(nullable = false)
+    val createdAt: LocalDateTime = LocalDateTime.now(),
 
-    // 나의 채팅방 목록만 뽑아 올 수 있음.
     @OneToMany(mappedBy = "device", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
-    val chatRoomDevices: List<ChatRoomDevice> = mutableListOf()
+    val userDevices: MutableList<UserDevice> = mutableListOf(),
+
+    @OneToMany(mappedBy = "device", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
+    val chatRoomDevices: MutableList<ChatRoomDevice> = mutableListOf()
 )
