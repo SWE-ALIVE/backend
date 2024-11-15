@@ -1,8 +1,7 @@
 package com.example.demo.model
 
 import jakarta.persistence.*
-import jakarta.validation.constraints.Size
-import java.util.UUID
+import java.util.*
 
 @Entity
 @Table(name = "chat_room")

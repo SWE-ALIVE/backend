@@ -3,8 +3,6 @@ package com.example.demo.model
 import jakarta.persistence.*
 import jakarta.validation.constraints.Pattern
 import jakarta.validation.constraints.Size
-import main.kotlin.com.example.demo.model.UserDevice
-import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalDateTime.*
 import java.time.LocalTime

@@ -1,4 +1,4 @@
-package main.kotlin.com.example.demo.model
+package com.example.demo.model
 
 import jakarta.persistence.*
 import java.time.LocalDate
@@ -7,7 +7,7 @@ import java.util.*
 
 
 @Entity
-@Table(name = "device_usage_records")
+@Table(name = "device_usage_record")
 data class DeviceUsageRecord(
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
