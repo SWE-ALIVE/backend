@@ -1,7 +1,6 @@
 package com.example.demo.model
 
 import jakarta.persistence.*
-import main.kotlin.com.example.demo.model.UserDevice
 import java.time.LocalDateTime
 import java.util.UUID
 
