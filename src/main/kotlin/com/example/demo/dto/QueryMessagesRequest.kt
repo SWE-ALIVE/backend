@@ -4,7 +4,8 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategies
 import com.fasterxml.jackson.databind.annotation.JsonNaming
 
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy::class)
-data class SendbirdUserInviteRequest(
+data class QueryMessagesRequest(
     val channelUrl: String,
-    val userIds: List<String>
+    val messageTs: String,
+    val limit: Int
 )

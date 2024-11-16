@@ -1,9 +1,6 @@
 package com.example.demo.controller
 
-import com.example.demo.dto.SendbirdChannelCreateRequest
-import com.example.demo.dto.SendbirdUserCreateRequest
-import com.example.demo.dto.SendbirdUserCreateResponse
-import com.example.demo.dto.SendbirdUserInviteRequest
+import com.example.demo.dto.*
 import com.example.demo.service.SendbirdService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -30,15 +27,6 @@ class SendbirdController(
         return sendbirdService.createUser(sendbirdUserCreateRequest.userId, sendbirdUserCreateRequest.nickname, sendbirdUserCreateRequest.profileUrl)
     }
 
-    @PostMapping("/message")
-    fun sendMessage(
-        @RequestParam channelUrl: String,
-        @RequestParam userId: String,
-        @RequestParam message: String
-    ): ResponseEntity<String> {
-        return sendbirdService.sendMessage(channelUrl, userId, message)
-    }
-
     @GetMapping("/channels")
     fun getGroupChannels(): ResponseEntity<String> {
         return sendbirdService.getGroupChannels()
@@ -51,12 +39,25 @@ class SendbirdController(
         return sendbirdService.createGroupChannel(sendbirdChannelCreateRequest)
     }
 
-    @PostMapping("/channels/{channelUrl}/users")
+    @PostMapping("/channels/users")
     fun addUserToChannel(
-        @PathVariable channelUrl: String,
         @RequestBody sendbirdUserInviteRequest: SendbirdUserInviteRequest
     ): ResponseEntity<String> {
-        return sendbirdService.addUserToChannel(channelUrl, sendbirdUserInviteRequest.userIds)
+        return sendbirdService.addUserToChannel(sendbirdUserInviteRequest.channelUrl, sendbirdUserInviteRequest.userIds)
+    }
+
+    @PostMapping("/channels/messages")
+    fun sendMessagesToChannel(
+        @RequestBody request: SendMessageRequest
+    ): ResponseEntity<String> {
+        return sendbirdService.sendMessagesToChannel(request.channelUrl, request.userId, request.message)
+    }
+
+    @PostMapping("/channels/messages/query")
+    fun queryMessagesFromChannel(
+        @RequestBody request: QueryMessagesRequest
+    ): ResponseEntity<String> {
+        return sendbirdService.queryMessagesFromChannel(request.channelUrl, request.messageTs, request.limit)
     }
 
 }
