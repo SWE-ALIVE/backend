@@ -1,6 +1,8 @@
 package com.example.demo.service
 
 import com.example.demo.config.SendbirdConfig
+import com.example.demo.dto.SendbirdChannelCreateRequest
+import com.example.demo.dto.SendbirdUserCreateResponse
 import org.slf4j.LoggerFactory
 import org.springframework.http.*
 import org.springframework.stereotype.Service
@@ -14,20 +16,18 @@ class SendbirdService(
 ) {
     private val baseUrl = "https://api-${sendbirdConfig.appId}.sendbird.com/v3"
     private val logger = LoggerFactory.getLogger(SendbirdService::class.java)
-
+    private val headers = HttpHeaders().apply {
+        add("Api-Token", sendbirdConfig.apiKey)
+        contentType = MediaType.APPLICATION_JSON
+    }
 
     fun getUsers(): ResponseEntity<String> {
         val url = UriComponentsBuilder
             .fromHttpUrl("$baseUrl/users")
             .toUriString()
 
-        val headers = HttpHeaders().apply {
-            set("Api-Token", sendbirdConfig.apiKey)
-            contentType = MediaType.APPLICATION_JSON
-        }
-
         logger.debug("Request URL: $url")
-        logger.debug("Request Headers: $headers")
+        logger.debug("Request Headers: {}", headers)
 
         val entity = HttpEntity<String>(headers)
 
@@ -40,25 +40,53 @@ class SendbirdService(
             ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("API call failed: ${ex.message}")
         }
     }
-    // 유저 생성
-    fun createUser(userId: String, nickname: String): ResponseEntity<String> {
+
+    fun createUser(userId: String, nickname: String, profileUrl: String): ResponseEntity<SendbirdUserCreateResponse> {
         val url = "$baseUrl/users"
-        val headers = HttpHeaders().apply {
-            add("Api-Token", sendbirdConfig.apiKey)
-            contentType = MediaType.APPLICATION_JSON
-        }
-        val body = mapOf("user_id" to userId, "nickname" to nickname)
+
+        val body = mapOf("user_id" to userId, "nickname" to nickname, "profile_url" to profileUrl)
+        val request = HttpEntity(body, headers)
+
+        return restTemplate.postForEntity(url, request, SendbirdUserCreateResponse::class.java)
+    }
+
+    fun deleteUser(userId: String): ResponseEntity<String> {
+        val url = "$baseUrl/users/$userId"
+        val request = HttpEntity<Any>(headers)
+        return restTemplate.exchange(url, HttpMethod.DELETE, request, String::class.java)
+    }
+
+    fun getGroupChannels(): ResponseEntity<String> {
+        val url = "$baseUrl/group_channels"
+
+        // HttpEntity 객체에 헤더만 포함
+        val requestEntity = HttpEntity<Any>(headers)
+
+        return restTemplate.exchange(url, HttpMethod.GET, requestEntity, String::class.java)
+    }
+
+
+    fun createGroupChannel(sendbirdChannelCreateRequest: SendbirdChannelCreateRequest): ResponseEntity<String> {
+        val url = "$baseUrl/group_channels"
+        val body = mapOf(
+            "name" to sendbirdChannelCreateRequest.name,
+            "channel_url" to sendbirdChannelCreateRequest.channelUrl,
+            "user_ids" to sendbirdChannelCreateRequest.userIds,
+            "operator_ids" to sendbirdChannelCreateRequest.operatorIds
+        )
         val request = HttpEntity(body, headers)
         return restTemplate.postForEntity(url, request, String::class.java)
     }
 
-    // 메시지 전송
-    fun sendMessage(channelUrl: String, userId: String, message: String): ResponseEntity<String> {
+    fun addUserToChannel(channelUrl: String, userIds: List<String>): ResponseEntity<String> {
+        val url = "$baseUrl/group_channels/$channelUrl/invite"
+        val body = mapOf("user_ids" to userIds)
+        val request = HttpEntity(body, headers)
+        return restTemplate.postForEntity(url, request, String::class.java)
+    }
+
+    fun sendMessagesToChannel(channelUrl: String, userId: String, message: String): ResponseEntity<String> {
         val url = "$baseUrl/group_channels/$channelUrl/messages"
-        val headers = HttpHeaders().apply {
-            add("Api-Token", sendbirdConfig.apiKey)
-            contentType = MediaType.APPLICATION_JSON
-        }
         val body = mapOf(
             "message_type" to "MESG",
             "user_id" to userId,
@@ -68,30 +96,16 @@ class SendbirdService(
         return restTemplate.postForEntity(url, request, String::class.java)
     }
 
-    fun getOpenChannels(): List<String>? {
-        val appId = sendbirdConfig.appId
-        val apiKey = sendbirdConfig.apiKey
+    fun queryMessagesFromChannel(channelUrl: String, messageTs: String, limit: Int): ResponseEntity<String> {
+        val validMessageTs = messageTs.ifEmpty { System.currentTimeMillis().toString() }
 
-        // Sendbird API URL 생성
-        val url = UriComponentsBuilder
-            .fromHttpUrl("https://api-$appId.sendbird.com/v3/open_channels")
+        val url = UriComponentsBuilder.fromHttpUrl("$baseUrl/group_channels/$channelUrl/messages")
+            .queryParam("message_ts", validMessageTs)
+            .queryParam("prev_limit", limit)
             .toUriString()
 
-        // 헤더 설정
-        val headers = HttpHeaders().apply {
-            set("Api-Token", apiKey)
-        }
-        val entity = HttpEntity<String>(headers)
-
-        // API 요청 보내기
-        val response = restTemplate.exchange(url, HttpMethod.GET, entity, Map::class.java)
-
-        // 응답 처리
-        return if (response.statusCode.is2xxSuccessful) {
-            val channels = response.body?.get("channels") as? List<Map<String, Any>>
-            channels?.map { it["channel_url"].toString() }
-        } else {
-            throw RuntimeException("Failed to fetch open channels from Sendbird")
-        }
+        val request = HttpEntity<Any>(headers)
+        return restTemplate.exchange(url, HttpMethod.GET, request, String::class.java)
     }
+
 }

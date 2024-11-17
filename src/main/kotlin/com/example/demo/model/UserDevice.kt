@@ -1,7 +1,5 @@
-package main.kotlin.com.example.demo.model
+package com.example.demo.model
 
-import com.example.demo.model.Device
-import com.example.demo.model.User
 import jakarta.persistence.*
 import java.util.*
 

@@ -1,11 +1,12 @@
 package com.example.demo.controller
 
+import com.example.demo.dto.*
 import com.example.demo.service.SendbirdService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 @RestController
-@RequestMapping("/api/sendbird")
+@RequestMapping("/v1/sendbird")
 class SendbirdController(
     private val sendbirdService: SendbirdService
 ) {
@@ -19,26 +20,51 @@ class SendbirdController(
         return sendbirdService.getUsers()
     }
 
-    @PostMapping("/user")
+    @PostMapping("/users")
     fun createUser(
-        @RequestParam userId: String,
-        @RequestParam nickname: String
-    ): ResponseEntity<String> {
-        return sendbirdService.createUser(userId, nickname)
+        @RequestBody sendbirdUserCreateRequest: SendbirdUserCreateRequest
+    ): ResponseEntity<SendbirdUserCreateResponse> {
+        return sendbirdService.createUser(sendbirdUserCreateRequest.userId, sendbirdUserCreateRequest.nickname, sendbirdUserCreateRequest.profileUrl)
     }
 
-    @PostMapping("/message")
-    fun sendMessage(
-        @RequestParam channelUrl: String,
-        @RequestParam userId: String,
-        @RequestParam message: String
+    @DeleteMapping("/users/{userId}")
+    fun deleteUser(
+        @PathVariable userId: String
     ): ResponseEntity<String> {
-        return sendbirdService.sendMessage(channelUrl, userId, message)
+        return sendbirdService.deleteUser(userId)
     }
 
     @GetMapping("/channels")
-    fun getOpenChannels(): ResponseEntity<List<String>> {
-        val channelUrls = sendbirdService.getOpenChannels()
-        return ResponseEntity.ok(channelUrls)
+    fun getGroupChannels(): ResponseEntity<String> {
+        return sendbirdService.getGroupChannels()
     }
+
+    @PostMapping("/channels")
+    fun createGroupChannel(
+        @RequestBody sendbirdChannelCreateRequest: SendbirdChannelCreateRequest
+    ): ResponseEntity<String> {
+        return sendbirdService.createGroupChannel(sendbirdChannelCreateRequest)
+    }
+
+    @PostMapping("/channels/users")
+    fun addUserToChannel(
+        @RequestBody sendbirdUserInviteRequest: SendbirdUserInviteRequest
+    ): ResponseEntity<String> {
+        return sendbirdService.addUserToChannel(sendbirdUserInviteRequest.channelUrl, sendbirdUserInviteRequest.userIds)
+    }
+
+    @PostMapping("/channels/messages")
+    fun sendMessagesToChannel(
+        @RequestBody request: SendMessageRequest
+    ): ResponseEntity<String> {
+        return sendbirdService.sendMessagesToChannel(request.channelUrl, request.userId, request.message)
+    }
+
+    @PostMapping("/channels/messages/query")
+    fun queryMessagesFromChannel(
+        @RequestBody request: QueryMessagesRequest
+    ): ResponseEntity<String> {
+        return sendbirdService.queryMessagesFromChannel(request.channelUrl, request.messageTs, request.limit)
+    }
+
 }
