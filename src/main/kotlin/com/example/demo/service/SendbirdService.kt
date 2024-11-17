@@ -27,7 +27,7 @@ class SendbirdService(
             .toUriString()
 
         logger.debug("Request URL: $url")
-        logger.debug("Request Headers: $headers")
+        logger.debug("Request Headers: {}", headers)
 
         val entity = HttpEntity<String>(headers)
 
@@ -48,6 +48,12 @@ class SendbirdService(
         val request = HttpEntity(body, headers)
 
         return restTemplate.postForEntity(url, request, SendbirdUserCreateResponse::class.java)
+    }
+
+    fun deleteUser(userId: String): ResponseEntity<String> {
+        val url = "$baseUrl/users/$userId"
+        val request = HttpEntity<Any>(headers)
+        return restTemplate.exchange(url, HttpMethod.DELETE, request, String::class.java)
     }
 
     fun getGroupChannels(): ResponseEntity<String> {

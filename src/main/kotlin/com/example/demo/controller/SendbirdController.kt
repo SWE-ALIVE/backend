@@ -27,6 +27,13 @@ class SendbirdController(
         return sendbirdService.createUser(sendbirdUserCreateRequest.userId, sendbirdUserCreateRequest.nickname, sendbirdUserCreateRequest.profileUrl)
     }
 
+    @DeleteMapping("/users/{userId}")
+    fun deleteUser(
+        @PathVariable userId: String
+    ): ResponseEntity<String> {
+        return sendbirdService.deleteUser(userId)
+    }
+
     @GetMapping("/channels")
     fun getGroupChannels(): ResponseEntity<String> {
         return sendbirdService.getGroupChannels()
