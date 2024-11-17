@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 @RestController
-@RequestMapping("/api/sendbird")
+@RequestMapping("/v1/sendbird")
 class SendbirdController(
     private val sendbirdService: SendbirdService
 ) {
