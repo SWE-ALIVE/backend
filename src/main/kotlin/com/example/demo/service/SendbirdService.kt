@@ -41,7 +41,6 @@ class SendbirdService(
         }
     }
 
-    // 유저 생성
     fun createUser(userId: String, nickname: String, profileUrl: String): ResponseEntity<SendbirdUserCreateResponse> {
         val url = "$baseUrl/users"
 
