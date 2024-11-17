@@ -19,5 +19,5 @@ data class ChatRoomDevice(
     val device: Device,
 
     @Column(nullable = false)
-    val deviceStatus: Boolean
+    var deviceStatus: Boolean
 )
