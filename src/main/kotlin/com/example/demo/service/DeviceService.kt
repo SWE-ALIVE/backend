@@ -6,7 +6,7 @@ import com.example.demo.repository.ChatRoomDeviceRepository
 import com.example.demo.repository.DeviceRepository
 import com.example.demo.repository.DeviceUsageRecordRepository
 import com.example.demo.repository.UserDeviceRepository
-import main.kotlin.com.example.demo.model.DeviceUsageRecord
+import com.example.demo.model.DeviceUsageRecord
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
@@ -32,14 +32,11 @@ class DeviceService(
         return true
     }
 
-    fun getDeviceUsageRecords(request: DeviceUsageRequestDTO): ResponseEntity<DeviceUsageResponseDTO> {
-        val records = deviceUsageRecordRepository.findByUserIdAndDeviceID(
-            request.userId,
-            request.deviceId
-        )
+    fun getDeviceUsageRecords(request: DeviceUsageRequestDTO): DeviceUsageResponseDTO {
+        val records = deviceUsageRecordRepository.findByUserDeviceId(request.userDeviceId)
 
         if (records.isEmpty()) {
-            throw NoSuchElementException("No records found for userId: ${request.userId}, deviceId: ${request.deviceId}")
+            throw NoSuchElementException("No records found for userDeviceId: ${request.userDeviceId}")
         }
 
         // 기기 가져오기
@@ -47,7 +44,7 @@ class DeviceService(
 
         // 사용자와 기기를 기준으로 채팅방 필터링
         val chatRooms = device.chatRoomDevices
-            .filter { chatRoomDevice -> chatRoomDevice.chatRoom.user.id == request.userId }
+            .filter { chatRoomDevice -> chatRoomDevice.chatRoom.user.id == records.first().userDevice.user.id }
             .map { chatRoomDevice ->
                 ChatRoomDTO(
                     chatRoomName = chatRoomDevice.chatRoom.name,
@@ -71,7 +68,6 @@ class DeviceService(
             actions = actions
         )
 
-        // ResponseEntity로 반환
-        return ResponseEntity.ok(response)
+        return response
     }
 }
