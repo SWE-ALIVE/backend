@@ -45,7 +45,7 @@ class UserController(@Autowired private val userService: UserService) {
 
     @GetMapping("/{userId}/devices")
     fun getUserDevices(@PathVariable userId: UUID): ResponseEntity<List<UserDeviceDTO>> {
-        return try {2
+        return try {
             val user = userService.getUser(userId)  // 유저 조회 (UserNotFoundException 예외 발생 가능)
 
             // 유저가 존재하면 해당 유저의 userDevices 정보를 가져와서 반환
