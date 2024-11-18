@@ -44,7 +44,7 @@ class SecurityConfig {
     fun corsConfigurationSource(): CorsConfigurationSource {
         val configuration = CorsConfiguration()
         configuration.allowedOrigins = mutableListOf("*") // 허용할 도메인 설정
-        configuration.allowedMethods = mutableListOf("GET", "POST", "PUT", "DELETE", "OPTIONS") // 허용할 HTTP 메서드 설정
+        configuration.allowedMethods = mutableListOf("GET", "POST", "PUT", "DELETE", "PATCH", "OPTION") // 허용할 HTTP 메서드 설정
         configuration.allowedHeaders =
             mutableListOf("Authorization", "Cache-Control", "Content-Type")
         configuration.allowCredentials = true
