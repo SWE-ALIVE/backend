@@ -31,6 +31,12 @@ class SendbirdChannelService(
         return restTemplate.postForEntity(url, entity, String::class.java)
     }
 
+    fun deleteGroupChannel(channelUrl: String): ResponseEntity<String> {
+        val url = apiHelper.buildUrl("group_channels/$channelUrl")
+        val request = HttpEntity<Any>(apiHelper.getHeaders())
+        return restTemplate.exchange(url, HttpMethod.DELETE, request, String::class.java)
+    }
+
     fun addUserToChannel(channelUrl: String, userIds: List<String>): ResponseEntity<String> {
         val url = apiHelper.buildUrl("group_channels/$channelUrl/invite")
         val body = mapOf("user_ids" to userIds)
