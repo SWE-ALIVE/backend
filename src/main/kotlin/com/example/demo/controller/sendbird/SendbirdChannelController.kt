@@ -24,6 +24,13 @@ class SendbirdChannelController(
         return sendbirdChannelService.createGroupChannel(sendbirdChannelCreateRequest)
     }
 
+    @DeleteMapping
+    fun deleteGroupChannel(
+        @RequestParam channelUrl: String
+    ): ResponseEntity<String> {
+        return sendbirdChannelService.deleteGroupChannel(channelUrl)
+    }
+
     @PostMapping("/users")
     fun addUserToChannel(
         @RequestBody sendbirdUserInviteRequest: SendbirdUserInviteRequest
