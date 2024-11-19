@@ -33,4 +33,12 @@ class SendbirdChannelController(
             sendbirdUserInviteRequest.userIds
         )
     }
+
+    @GetMapping("/{channelUrl}/users")
+    fun getUsersInChannel(
+        @PathVariable channelUrl: String
+    ): ResponseEntity<String> {
+        return sendbirdChannelService.getUsersInChannel(channelUrl)
+    }
+
 }

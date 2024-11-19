@@ -24,13 +24,16 @@ class SendbirdMessageService(
         return restTemplate.postForEntity(url, request, String::class.java)
     }
 
-    fun queryMessagesFromChannel(channelUrl: String, messageTs: String, limit: Int): ResponseEntity<String> {
+    fun queryMessagesFromChannel(channelUrl: String, messageTs: String, limit: Int?): ResponseEntity<String> {
         val validMessageTs = messageTs.ifEmpty { System.currentTimeMillis().toString() }
 
-        val url = UriComponentsBuilder.fromHttpUrl(apiHelper.buildUrl("group_channels/$channelUrl/messages"))
+        val urlBuilder = UriComponentsBuilder.fromHttpUrl(apiHelper.buildUrl("group_channels/$channelUrl/messages"))
             .queryParam("message_ts", validMessageTs)
-            .queryParam("prev_limit", limit)
-            .toUriString()
+
+        if (limit != null) {
+            urlBuilder.queryParam("prev_limit", limit)
+        }
+        val url = urlBuilder.toUriString()
 
         val request = HttpEntity<Any>(apiHelper.getHeaders())
         return restTemplate.exchange(url, HttpMethod.GET, request, String::class.java)
