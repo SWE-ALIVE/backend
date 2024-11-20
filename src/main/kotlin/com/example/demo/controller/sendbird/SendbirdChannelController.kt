@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*
 class SendbirdChannelController(
     private val sendbirdChannelService: SendbirdChannelService
 ) {
+
     @GetMapping
     fun getGroupChannelsByUserId(
         @RequestParam userId: String

@@ -26,6 +26,7 @@ class SendbirdMessageController(
         )
     }
 
+    // 채널의 메시지를 가져오는 것
     @PostMapping("/query")
     fun queryMessagesFromChannel(
         @RequestBody request: QueryMessagesRequest

@@ -6,6 +6,7 @@ import com.example.demo.dto.UserDeviceDTO
 import com.example.demo.exception.UserNotFoundException
 import com.example.demo.model.User
 import com.example.demo.service.UserService
+import com.example.demo.service.sendbird.SendbirdUserService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -13,7 +14,16 @@ import java.util.*
 
 @RestController
 @RequestMapping("/v1")
-class UserController(private val userService: UserService) {
+class UserController(
+    private val userService: UserService,
+    private val sendbirdUserService: SendbirdUserService
+) {
+
+    @PostMapping("/SignUp")
+    fun createUser(@RequestBody request: User): User {
+        sendbirdUserService.createUser(request.id.toString(), request.name, "")
+        return userService.createUser(request)
+    }
 
     // 모든 사용자 조회
     @GetMapping("/users")
@@ -31,41 +41,32 @@ class UserController(private val userService: UserService) {
         }
     }
 
-
     @GetMapping("/user")
     fun getUser(@RequestBody request: String): UserDTO {
         // User 리스트를 가져오고 DTO로 변환
         val user: User = userService.getUserByPhoneNumber(request).get()
 
         return UserDTO(
-                id = user.id,
-                name = user.name,
-                birthDate = user.birthDate,
-                phoneNumber = user.phoneNumber,
-            )
+            id = user.id,
+            name = user.name,
+            birthDate = user.birthDate,
+            phoneNumber = user.phoneNumber,
+        )
     }
 
-    @GetMapping("/users/{userId}/chatrooms")
-    fun getUserChatRooms(@PathVariable userId: UUID): ResponseEntity<List<ChatRoomResponseDTO>> {
-
-        // 유저 정보 가져오기
+    @DeleteMapping("/users/{userId}")
+    fun deleteUser(
+        @PathVariable userId: UUID
+    ): ResponseEntity<String> {
         return try {
-            val user = userService.getUser(userId)  // 유저 조회 (UserNotFoundException 예외 발생 가능)
-
-            // 유저가 존재하면 해당 유저의 chatRooms 정보를 가져와서 반환
-            val chatRoomsDTO = user.chatRooms.map { chatRoom ->
-                // 채팅방 이름과 연결된 장치들을 DTO로 변환
-                val devices = chatRoom.chatRoomDevices.map { it.device.productNumber }
-                ChatRoomResponseDTO(chatRoom.name, devices)
-            }
-            ResponseEntity.ok(chatRoomsDTO)
-        } catch (e: UserNotFoundException) {
-            // 유저가 존재하지 않으면 404 반환
-            ResponseEntity.status(HttpStatus.NOT_FOUND).build()
+            sendbirdUserService.deleteUser(userId.toString())
+            userService.deleteUser(userId)
+            ResponseEntity<String>("User deleted successfully", HttpStatus.OK)
         } catch (e: Exception) {
-            ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build()
+            ResponseEntity<String>(e.message, HttpStatus.BAD_REQUEST)
         }
     }
+
 
     @GetMapping("/users/{userId}/devices")
     fun getUserDevices(@PathVariable userId: UUID): ResponseEntity<List<UserDeviceDTO>> {

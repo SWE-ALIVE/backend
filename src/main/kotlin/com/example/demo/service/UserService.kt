@@ -62,10 +62,15 @@ class UserService(private val userRepository: UserRepository) {
     }
 
     // 사용자 삭제
-    fun deleteUser(id: UUID): Boolean {
-        return userRepository.findById(id).map {
-            userRepository.delete(it)
-            true
-        }.orElse(false)
+    @Transactional
+    fun deleteUser(id: UUID) {
+        if(!userRepository.existsById(id)) {
+            throw UserNotFoundException("User with id $id not found")
+        }
+        userRepository.deleteById(id)
+    }
+
+    fun createUser(request: User): User {
+        return userRepository.save(request)
     }
 }
