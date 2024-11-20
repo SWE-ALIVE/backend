@@ -1,8 +1,10 @@
 package com.example.demo.controller
 
+import com.example.demo.dto.ChannelDeviceDTO
 import com.example.demo.dto.ChatRoomResponseDTO
 import com.example.demo.exception.UserNotFoundException
 import com.example.demo.service.UserService
+import com.example.demo.service.sendbird.SendbirdChannelService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
@@ -16,12 +18,11 @@ import java.util.*
 @RequestMapping("/v1/channels")
 class ChatRoomController(
     private val userService: UserService,
-
+    private val sendbirdChannelService: SendbirdChannelService
 ) {
 
     @GetMapping
     fun getUserChatRooms(@RequestParam userId: UUID): ResponseEntity<List<ChatRoomResponseDTO>> {
-
         // 유저 정보 가져오기
         return try {
             val user = userService.getUser(userId)  // 유저 조회 (UserNotFoundException 예외 발생 가능)
@@ -39,5 +40,12 @@ class ChatRoomController(
         } catch (e: Exception) {
             ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build()
         }
+    }
+
+    @GetMapping("/{channelUrl}/users")
+    fun getUsersInChannel(
+        @PathVariable channelUrl: String
+    ): ResponseEntity<List<ChannelDeviceDTO>> {
+        return ResponseEntity.ok(sendbirdChannelService.getUsersInChannel(channelUrl))
     }
 }
