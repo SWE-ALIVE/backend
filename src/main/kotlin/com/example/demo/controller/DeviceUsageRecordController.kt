@@ -2,18 +2,18 @@ package com.example.demo.controller
 
 import com.example.demo.dto.DeviceUsageRequestDTO
 import com.example.demo.dto.DeviceUsageResponseDTO
-import com.example.demo.exception.DeviceNotInProgressException
 import com.example.demo.service.DeviceService
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.*
-import java.util.*
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/v1/device-usage")
 class DeviceUsageRecordController(
-    @Autowired private val deviceService: DeviceService
+    private val deviceService: DeviceService
 ) {
     @GetMapping
     fun getDeviceUsageRecords(

@@ -1,22 +1,22 @@
 package com.example.demo.service
 
-import com.example.demo.dto.*
+import com.example.demo.dto.ActionDTO
+import com.example.demo.dto.ChatRoomDTO
+import com.example.demo.dto.DeviceUsageRequestDTO
+import com.example.demo.dto.DeviceUsageResponseDTO
 import com.example.demo.exception.DeviceNotFoundInChatRoomException
-import com.example.demo.exception.UserDeviceNotFoundException
 import com.example.demo.repository.ChatRoomDeviceRepository
 import com.example.demo.repository.DeviceRepository
 import com.example.demo.repository.DeviceUsageRecordRepository
 import com.example.demo.repository.UserDeviceRepository
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.util.*
 
 @Service
 class DeviceService(
-    @Autowired private val deviceUsageRecordRepository: DeviceUsageRecordRepository,
-    @Autowired private val chatRoomDeviceRepository: ChatRoomDeviceRepository,
-    @Autowired private val userDeviceRepository: UserDeviceRepository,
-    @Autowired private val deviceRepository: DeviceRepository
+    private val deviceUsageRecordRepository: DeviceUsageRecordRepository,
+    private val chatRoomDeviceRepository: ChatRoomDeviceRepository,
+    private val userDeviceRepository: UserDeviceRepository
 ) {
 
     fun updateDeviceStatus(chatroomId: UUID, deviceId: UUID, deviceStatus: Boolean) {

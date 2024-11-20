@@ -6,8 +6,7 @@ import jakarta.validation.constraints.Pattern
 import jakarta.validation.constraints.Size
 import java.time.LocalDate
 import java.time.LocalDateTime
-import java.time.LocalDateTime.*
-import java.time.LocalTime
+import java.time.LocalDateTime.now
 import java.util.*
 
 @Entity
