@@ -41,7 +41,7 @@ class UserController(
         }
     }
 
-    @GetMapping("/user")
+    @PostMapping("/user")
     fun getUser(@RequestBody request: String): UserDTO {
         // User 리스트를 가져오고 DTO로 변환
         val user: User = userService.getUserByPhoneNumber(request).get()
