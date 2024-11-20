@@ -1,20 +1,18 @@
 package com.example.demo.controller
 
 import com.example.demo.dto.DeviceStatusRequestDTO
-import com.example.demo.dto.DeviceUsageResponseDTO
 import com.example.demo.exception.DeviceNotFoundInChatRoomException
-import com.example.demo.exception.DeviceNotInProgressException
-import com.example.demo.model.Device
 import com.example.demo.service.DeviceService
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.*
-import java.util.*
+import org.springframework.web.bind.annotation.PatchMapping
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/v1/devices")
-class DeviceController(@Autowired private val deviceService: DeviceService) {
+class DeviceController(private val deviceService: DeviceService) {
 
     @PatchMapping("/status")
     fun updateDeviceStatus(@RequestBody request: DeviceStatusRequestDTO): ResponseEntity<String> {

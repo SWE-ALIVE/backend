@@ -6,12 +6,11 @@ import com.example.demo.exception.UserNotFoundException
 import com.example.demo.model.User
 import com.example.demo.repository.UserRepository
 import jakarta.transaction.Transactional
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.util.*
 
 @Service
-class UserService(@Autowired private val userRepository: UserRepository) {
+class UserService(private val userRepository: UserRepository) {
 
     fun login(request: LoginRequestDTO): UserResponseDTO {
         // 전화번호와 비밀번호로 사용자 조회. 없으면 예외 발생
