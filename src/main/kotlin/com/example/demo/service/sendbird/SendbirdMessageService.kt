@@ -30,7 +30,7 @@ class SendbirdMessageService(
         val urlBuilder = UriComponentsBuilder.fromHttpUrl(apiHelper.buildUrl("group_channels/$channelUrl/messages"))
             .queryParam("message_ts", validMessageTs)
 
-        if (limit != null) {
+        if (limit != 0) {
             urlBuilder.queryParam("prev_limit", limit)
         }
         val url = urlBuilder.toUriString()
