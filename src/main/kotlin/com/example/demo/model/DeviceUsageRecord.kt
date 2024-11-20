@@ -1,6 +1,7 @@
 package com.example.demo.model
 
 import jakarta.persistence.*
+import org.hibernate.validator.constraints.UUID
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.util.*
