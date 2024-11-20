@@ -10,6 +10,7 @@ import com.example.demo.repository.DeviceRepository
 import com.example.demo.repository.DeviceUsageRecordRepository
 import com.example.demo.repository.UserDeviceRepository
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import java.util.*
 
 @Service
@@ -19,6 +20,7 @@ class DeviceService(
     private val userDeviceRepository: UserDeviceRepository
 ) {
 
+    @Transactional
     fun updateDeviceStatus(chatroomId: UUID, deviceId: UUID, deviceStatus: Boolean) {
         // ChatRoomDevice를 찾는다 (chatroomId, deviceId로 찾기)
         val chatRoomDevice = chatRoomDeviceRepository.findByChatRoomIdAndDeviceId(chatroomId, deviceId)

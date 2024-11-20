@@ -5,8 +5,8 @@ import com.example.demo.dto.UserResponseDTO
 import com.example.demo.exception.UserNotFoundException
 import com.example.demo.model.User
 import com.example.demo.repository.UserRepository
-import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import java.util.*
 
 @Service
@@ -50,6 +50,7 @@ class UserService(private val userRepository: UserRepository) {
 
 
     // 사용자 정보 업데이트
+    @Transactional
     fun updateUser(id: UUID, updatedUser: User): Optional<User> {
         return userRepository.findById(id).map {
             it.copy(
@@ -70,6 +71,7 @@ class UserService(private val userRepository: UserRepository) {
         userRepository.deleteById(id)
     }
 
+    @Transactional
     fun createUser(request: User): User {
         return userRepository.save(request)
     }

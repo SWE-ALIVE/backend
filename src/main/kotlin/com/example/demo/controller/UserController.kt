@@ -78,6 +78,7 @@ class UserController(
                 // UserDevice를 통해 DeviceDTO로 변환
                 UserDeviceDTO(
                     category = userDevice.device.category.name,  // DeviceCategory의 이름
+                    deviceId = userDevice.device.id,  // Device의 ID
                     deviceName = userDevice.device.productNumber // 장치 이름
                 )
             }
@@ -85,8 +86,8 @@ class UserController(
             // 유저의 장치 목록 반환
             ResponseEntity.ok(userDevicesDTO)
         } catch (e: UserNotFoundException) {
-            // 유저가 존재하지 않으면 404 반환
-            ResponseEntity.status(HttpStatus.NOT_FOUND).build()
+            // 유저가 존재하지 않으면 400 반환
+            ResponseEntity.badRequest().build()
         }
     }
 }
