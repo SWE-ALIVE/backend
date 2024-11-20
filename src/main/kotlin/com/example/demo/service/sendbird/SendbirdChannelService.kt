@@ -13,8 +13,8 @@ class SendbirdChannelService(
     private val restTemplate: RestTemplate,
     private val apiHelper: SendbirdApiHelper
 ) {
-    fun getGroupChannels(): ResponseEntity<String> {
-        val url = apiHelper.buildUrl("group_channels")
+    fun getGroupChannelsByUserId(userId: String): ResponseEntity<String> {
+        val url = apiHelper.buildUrl("users/$userId/my_group_channels")
         val request = HttpEntity<Any>(apiHelper.getHeaders())
         return restTemplate.exchange(url, HttpMethod.GET, request, String::class.java)
     }

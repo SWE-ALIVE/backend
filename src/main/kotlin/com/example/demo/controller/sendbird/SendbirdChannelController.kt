@@ -12,10 +12,11 @@ class SendbirdChannelController(
     private val sendbirdChannelService: SendbirdChannelService
 ) {
 
-    // 전체 가져오기
     @GetMapping
-    fun getGroupChannels(): ResponseEntity<String> {
-        return sendbirdChannelService.getGroupChannels()
+    fun getGroupChannelsByUserId(
+        @RequestParam userId: String
+    ): ResponseEntity<String> {
+        return sendbirdChannelService.getGroupChannelsByUserId(userId)
     }
 
     @PostMapping
