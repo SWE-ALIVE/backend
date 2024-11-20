@@ -1,8 +1,12 @@
 .env
+.idea
+*.iml
 src/main/resources/application.yml
 *.yml
-.gradle/
+
+HELP.md
+.gradle
 build/
-.idea/
-
-
+!gradle/wrapper/gradle-wrapper.jar
+!**/src/main/**/build/
+!**/src/test/**/build/
