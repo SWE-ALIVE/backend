@@ -5,5 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository
 import java.util.*
 
 interface DeviceRepository : JpaRepository<Device, UUID> {
+
     fun findByProductNumber(productNumber: String): Optional<Device>
 }

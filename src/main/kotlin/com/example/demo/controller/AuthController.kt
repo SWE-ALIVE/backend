@@ -16,7 +16,7 @@ import java.util.*
 @RequestMapping("/v1/auth")
 class AuthController(private val userService: UserService) {
 
-    @PostMapping("/")
+    @PostMapping("/login")
     fun login(@RequestBody request: LoginRequestDTO): ResponseEntity<UserResponseDTO> {
         return try {
             val userResponse: UserResponseDTO = userService.login(request)

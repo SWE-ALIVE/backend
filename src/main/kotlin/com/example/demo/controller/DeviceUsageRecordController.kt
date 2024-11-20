@@ -15,7 +15,7 @@ import java.util.*
 class DeviceUsageRecordController(
     @Autowired private val deviceService: DeviceService
 ) {
-    @PostMapping
+    @GetMapping
     fun getDeviceUsageRecords(
         @RequestBody request: DeviceUsageRequestDTO
     ): ResponseEntity<DeviceUsageResponseDTO> {
