@@ -1,8 +1,10 @@
 package com.example.demo.model
 
+import com.fasterxml.jackson.annotation.JsonManagedReference
 import jakarta.persistence.*
 import jakarta.validation.constraints.Pattern
 import jakarta.validation.constraints.Size
+import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalDateTime.*
 import java.time.LocalTime
@@ -28,7 +30,7 @@ data class User(
     val password: String,
 
     @Column(nullable = false)
-    val birthDate: LocalTime,
+    val birthDate: LocalDate,
 
     @Column(nullable = false, unique = true)
     val phoneNumber: String,
@@ -36,9 +38,11 @@ data class User(
     @Column(nullable = false)
     val createdAt: LocalDateTime = now(),
 
-    @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL])
+    @JsonManagedReference // 순환 참조의 시작
     val userDevices: MutableList<UserDevice> = mutableListOf(),
 
-    @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL])
+    @JsonManagedReference // 순환 참조의 시작
     val chatRooms: MutableList<ChatRoom> = mutableListOf()
 )

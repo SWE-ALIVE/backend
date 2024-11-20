@@ -1,5 +1,6 @@
 package com.example.demo.model
 
+import com.fasterxml.jackson.annotation.JsonBackReference
 import jakarta.persistence.*
 import java.util.*
 
@@ -12,6 +13,7 @@ data class ChatRoom(
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
     @JoinColumn(name = "user_id", nullable = false)
+    @JsonBackReference // 순환 참조의 끝
     val user: User,
 
     @Column(nullable = false)

@@ -1,9 +1,10 @@
 package com.example.demo.dto
 
+import com.fasterxml.jackson.annotation.JsonProperty
 import java.util.*
 
 data class DeviceStatusRequestDTO(
-    val chatroomId: UUID,  // 채팅방 ID
-    val deviceId: UUID,    // 장치 ID
-    val deviceStatus: Boolean
+    @JsonProperty("chatroom_id") val chatroomId: UUID,  // chatroom_id -> chatroomId
+    @JsonProperty("device_id") val deviceId: UUID,      // device_id -> deviceId
+    @JsonProperty("device_status") val deviceStatus: Boolean  // device_status -> deviceStatus
 )

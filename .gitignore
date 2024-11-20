@@ -1,3 +1,8 @@
 .env
 src/main/resources/application.yml
 *.yml
+.gradle/
+build/
+.idea/
+
+

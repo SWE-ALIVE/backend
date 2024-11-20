@@ -2,41 +2,44 @@ package com.example.demo.service
 
 import com.example.demo.dto.*
 import com.example.demo.exception.DeviceNotFoundInChatRoomException
+import com.example.demo.exception.UserDeviceNotFoundException
 import com.example.demo.repository.ChatRoomDeviceRepository
 import com.example.demo.repository.DeviceRepository
 import com.example.demo.repository.DeviceUsageRecordRepository
 import com.example.demo.repository.UserDeviceRepository
-import com.example.demo.model.DeviceUsageRecord
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 import java.util.*
 
 @Service
 class DeviceService(
     @Autowired private val deviceUsageRecordRepository: DeviceUsageRecordRepository,
-    @Autowired private val chatRoomDeviceRepository: ChatRoomDeviceRepository
+    @Autowired private val chatRoomDeviceRepository: ChatRoomDeviceRepository,
+    @Autowired private val userDeviceRepository: UserDeviceRepository,
+    @Autowired private val deviceRepository: DeviceRepository
 ) {
 
-    fun updateDeviceStatus(chatroomId: UUID, deviceId: UUID, deviceStatus: Boolean): Boolean {
+    fun updateDeviceStatus(chatroomId: UUID, deviceId: UUID, deviceStatus: Boolean) {
         // ChatRoomDevice를 찾는다 (chatroomId, deviceId로 찾기)
         val chatRoomDevice = chatRoomDeviceRepository.findByChatRoomIdAndDeviceId(chatroomId, deviceId)
             ?: throw DeviceNotFoundInChatRoomException("Device with ID $deviceId not found in chatroom $chatroomId")
-
+        
         // 장치 상태 업데이트
         chatRoomDevice.deviceStatus = deviceStatus
 
         // 변경된 상태를 저장
         chatRoomDeviceRepository.save(chatRoomDevice)
 
-        return true
     }
 
     fun getDeviceUsageRecords(request: DeviceUsageRequestDTO): DeviceUsageResponseDTO {
-        val records = deviceUsageRecordRepository.findByUserDeviceId(request.userDeviceId)
+
+        val userDeviceId = userDeviceRepository.findUserDeviceByUserIdAndDeviceId(request.userId, request.deviceId)
+
+        val records = deviceUsageRecordRepository.findByUserDeviceId(userDeviceId.id)
 
         if (records.isEmpty()) {
-            throw NoSuchElementException("No records found for userDeviceId: ${request.userDeviceId}")
+            throw NoSuchElementException("No records found for userDeviceId: ${userDeviceId.id}")
         }
 
         // 기기 가져오기
@@ -70,4 +73,5 @@ class DeviceService(
 
         return response
     }
+
 }

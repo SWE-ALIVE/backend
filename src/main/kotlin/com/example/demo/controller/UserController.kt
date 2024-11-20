@@ -1,6 +1,7 @@
 package com.example.demo.controller
 
 import com.example.demo.dto.ChatRoomResponseDTO
+import com.example.demo.dto.UserDTO
 import com.example.demo.dto.UserDeviceDTO
 import com.example.demo.exception.UserNotFoundException
 import com.example.demo.model.User
@@ -12,16 +13,40 @@ import org.springframework.web.bind.annotation.*
 import java.util.*
 
 @RestController
-@RequestMapping("v1/users")
+@RequestMapping("/v1")
 class UserController(@Autowired private val userService: UserService) {
 
     // 모든 사용자 조회
-    @GetMapping
-    fun getAllUsers(): List<User> {
-        return userService.getAllUsers()
+    @GetMapping("/users")
+    fun getAllUsers(): List<UserDTO> {
+        // User 리스트를 가져오고 DTO로 변환
+        val users: List<User> = userService.getAllUsers()
+
+        return users.map { user ->
+            UserDTO(
+                id = user.id,
+                name = user.name,
+                birthDate = user.birthDate,
+                phoneNumber = user.phoneNumber,
+            )
+        }
     }
 
-    @GetMapping("/{userId}/chatrooms")
+
+    @GetMapping("/user")
+    fun getUser(@RequestBody request: String): UserDTO {
+        // User 리스트를 가져오고 DTO로 변환
+        val user: User = userService.getUserByPhoneNumber(request).get()
+
+        return UserDTO(
+                id = user.id,
+                name = user.name,
+                birthDate = user.birthDate,
+                phoneNumber = user.phoneNumber,
+            )
+    }
+
+    @GetMapping("/users/{userId}/chatrooms")
     fun getUserChatRooms(@PathVariable userId: UUID): ResponseEntity<List<ChatRoomResponseDTO>> {
 
         // 유저 정보 가져오기
@@ -43,7 +68,7 @@ class UserController(@Autowired private val userService: UserService) {
         }
     }
 
-    @GetMapping("/{userId}/devices")
+    @GetMapping("/users/{userId}/devices")
     fun getUserDevices(@PathVariable userId: UUID): ResponseEntity<List<UserDeviceDTO>> {
         return try {
             val user = userService.getUser(userId)  // 유저 조회 (UserNotFoundException 예외 발생 가능)

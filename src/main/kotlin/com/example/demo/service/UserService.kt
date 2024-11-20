@@ -5,6 +5,7 @@ import com.example.demo.dto.UserResponseDTO
 import com.example.demo.exception.UserNotFoundException
 import com.example.demo.model.User
 import com.example.demo.repository.UserRepository
+import jakarta.transaction.Transactional
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.util.*
@@ -31,6 +32,7 @@ class UserService(@Autowired private val userRepository: UserRepository) {
 
 
     // 사용자 목록 가져오기
+    @Transactional
     fun getAllUsers(): List<User> {
         return userRepository.findAll()
     }

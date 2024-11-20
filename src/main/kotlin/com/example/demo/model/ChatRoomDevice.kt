@@ -4,7 +4,12 @@ import jakarta.persistence.*
 import java.util.UUID
 
 @Entity
-@Table(name = "chat_room_device")
+@Table(
+    name = "chat_room_device",
+    uniqueConstraints = [
+        UniqueConstraint(columnNames = ["chatroom_id", "device_id"])  // chatroom_id와 device_id의 유니크 제약 추가
+    ]
+)
 data class ChatRoomDevice(
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
