@@ -11,10 +11,11 @@ import org.springframework.web.bind.annotation.*
 class SendbirdChannelController(
     private val sendbirdChannelService: SendbirdChannelService
 ) {
-
     @GetMapping
-    fun getGroupChannels(): ResponseEntity<String> {
-        return sendbirdChannelService.getGroupChannels()
+    fun getGroupChannelsByUserId(
+        @RequestParam userId: String
+    ): ResponseEntity<String> {
+        return sendbirdChannelService.getGroupChannelsByUserId(userId)
     }
 
     @PostMapping
