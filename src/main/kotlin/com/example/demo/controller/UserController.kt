@@ -1,7 +1,5 @@
 package com.example.demo.controller
 
-import com.example.demo.dto.ChatRoomResponseDTO
-import com.example.demo.dto.UserDTO
 import com.example.demo.dto.UserDeviceDTO
 import com.example.demo.dto.user.UserCreateRequestDTO
 import com.example.demo.dto.user.UserDTO

@@ -7,5 +7,4 @@ import java.util.*
 
 @Repository
 interface ChannelRepository : JpaRepository<Channel, UUID> {
-    abstract fun existsByProductNumber(productNumber: String): Boolean
 }

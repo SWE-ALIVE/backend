@@ -1,38 +1,34 @@
 package com.example.demo.service
 
-import com.example.demo.dto.ChannelCreateRequestDTO
+import com.example.demo.dto.UserInviteRequestDTO
+import com.example.demo.dto.sendbird.SendbirdChannelCreateRequest
 import com.example.demo.model.Channel
 import com.example.demo.model.ChannelDevice
-import com.example.demo.model.Chat
-import com.example.demo.model.Device
 import com.example.demo.repository.*
 import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
 import java.util.*
-import kotlin.NoSuchElementException
 
 @Service
 class ChannelService(
     private val channelRepository: ChannelRepository,
     private val userRepository: UserRepository,
-    private val chatRepository: ChatRepository,
-    private val deviceRepository: DeviceRepository,
-    private val channelDeviceRepository: ChannelDeviceRepository
+    private val deviceRepository: DeviceRepository
 ) {
 
     @Transactional
-    fun createChannel(channelDTO : ChannelCreateRequestDTO): Channel {
-        val user = userRepository.findById(channelDTO.operatorIds)
-            .orElseThrow { IllegalArgumentException("User with ID ${channelDTO.operatorIds} not found") }
+    fun createChannel(request: SendbirdChannelCreateRequest): Channel {
+        val user = userRepository.findById(UUID.fromString(request.operatorIds.first()))
+            .orElseThrow { IllegalArgumentException("User with ID ${request.operatorIds.first()} not found") }
 
         val channel = Channel(
             id = UUID.randomUUID(),
             user = user,
-            name = channelDTO.name,
+            name = request.name,
         )
         // 장치 추가
-        for (deviceId in channelDTO.productIds) {
-            val device = deviceRepository.findById(deviceId)
+        for (deviceId in request.deviceIds) {
+            val device = deviceRepository.findById(UUID.fromString(deviceId))
                 .orElseThrow { NoSuchElementException("Device with ID $deviceId not found") }
 
             channel.addDevice(device)
@@ -50,31 +46,27 @@ class ChannelService(
     }
 
     @Transactional
-    fun addContributorToChannel(channelId: UUID, deviceId: UUID): ChannelDevice {
-        // 채널 조회
+    fun addContributorsToChannel(requestDTO: UserInviteRequestDTO) {
+        val channelId = UUID.fromString(requestDTO.channelId)
+        val deviceIds = requestDTO.deviceIds.map { UUID.fromString(it) }
+
         val channel = channelRepository.findById(channelId)
             .orElseThrow { NoSuchElementException("Channel with ID $channelId not found") }
 
-        // 장치 조회
-        val device = deviceRepository.findById(deviceId)
-            .orElseThrow { NoSuchElementException("Device with ID $deviceId not found") }
+        // 장치들 조회
+        val devices = deviceRepository.findAllById(deviceIds)
 
-        // 새로운 ChannelDevice 생성
-        val channelDevice = ChannelDevice(
-            id = UUID.randomUUID(),
-            channel = channel,
-            device = device,
-            deviceStatus = true
-        )
-        return channelDeviceRepository.save(channelDevice)
+        // 모든 장치가 존재하는지 확인
+        val foundDeviceIds = devices.map { it.id }.toSet()
+        val missingDeviceIds = deviceIds.toSet() - foundDeviceIds
+
+        if (missingDeviceIds.isNotEmpty()) {
+            throw NoSuchElementException("Devices with IDs $missingDeviceIds not found")
+        }
+
+        // 장치들을 채널에 추가
+        devices.forEach { device ->
+            channel.addDevice(device)
+        }
     }
-
-//    fun getDevicesInChannel(channelId: UUID): List<String> {
-//        // 채널 조회
-//        val channel = channelRepository.findById(channelId)
-//            .orElseThrow { NoSuchElementException("Channel with ID $channelId not found") }
-//
-//        // 채널에 연결된 모든 Device 이름 반환
-//        return channel.channelDevices.map { it.device.productNumber }
-//    }
 }

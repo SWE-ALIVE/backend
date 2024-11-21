@@ -1,11 +1,9 @@
 package com.example.demo.controller
 
-import com.example.demo.dto.ChannelCreateRequestDTO
 import com.example.demo.dto.ChannelDeviceDTO
 import com.example.demo.dto.ChannelResponseDTO
 import com.example.demo.dto.UserInviteRequestDTO
 import com.example.demo.dto.sendbird.SendbirdChannelCreateRequest
-import com.example.demo.dto.sendbird.SendbirdUserInviteRequest
 import com.example.demo.exception.UserNotFoundException
 import com.example.demo.model.Channel
 import com.example.demo.model.ChannelDevice
@@ -23,29 +21,23 @@ class ChannelController(
     private val userService: UserService,
     private val sendbirdChannelService: SendbirdChannelService,
     private val channelService: ChannelService
-
 ) {
-
     @PostMapping
-    fun createChannel(@RequestBody channelCreateRequestDTO: ChannelCreateRequestDTO): Channel {
+    fun createChannel(
+        @RequestBody sendbirdChannelCreateRequest: SendbirdChannelCreateRequest
+    ): ResponseEntity<Channel> {
+        sendbirdChannelService.createGroupChannel(sendbirdChannelCreateRequest)
 
-        val sendbirdChannelCreateDTO = SendbirdChannelCreateRequest (
-            name = channelCreateRequestDTO.name,
-            userIds = channelCreateRequestDTO.productIds,
-            operatorIds = listOf(channelCreateRequestDTO.operatorIds)
-        )
-
-        sendbirdChannelService.createGroupChannel(sendbirdChannelCreateDTO)
-        return channelService.createChannel(channelCreateRequestDTO)
+        return ResponseEntity(channelService.createChannel(sendbirdChannelCreateRequest), HttpStatus.CREATED)
     }
 
     @DeleteMapping
     fun deleteChannel(
-        @RequestParam channelId: UUID
+        @RequestParam channelId: String
     ): ResponseEntity<String> {
         return try {
             sendbirdChannelService.deleteGroupChannel(channelId)
-            channelService.deleteChannel(channelId)
+            channelService.deleteChannel(UUID.fromString(channelId))
             ResponseEntity<String>("channel deleted successfully", HttpStatus.OK)
         } catch (e: Exception) {
             ResponseEntity<String>(e.message, HttpStatus.BAD_REQUEST)
@@ -53,11 +45,10 @@ class ChannelController(
     }
 
     @GetMapping("/{userId}")
-    fun getUserChannels(@PathVariable userId: UUID): ResponseEntity<List<ChannelResponseDTO>> {
+    fun getUserChannels(@PathVariable userId: String): ResponseEntity<List<ChannelResponseDTO>> {
         // 유저 정보 가져오기
         return try {
-            val user = userService.getUser(userId)  // 유저 조회 (UserNotFoundException 예외 발생 가능)
-
+            val user = userService.getUser(UUID.fromString(userId))
             // 유저가 존재하면 해당 유저의 channels 정보를 가져와서 반환
             val channelsDTO = user.channels.map { channel ->
                 // 채팅방 이름과 연결된 장치들을 DTO로 변환
@@ -75,31 +66,19 @@ class ChannelController(
 
     @GetMapping("/{channelId}/users")
     fun getUsersInChannel(
-        @PathVariable channelId: UUID
+        @PathVariable channelId: String
     ): ResponseEntity<List<ChannelDeviceDTO>> {
-        return ResponseEntity.ok(sendbirdChannelService.getUsersInChannel(channelId))
+
+        return ResponseEntity(sendbirdChannelService.getUsersInChannel(channelId), HttpStatus.OK)
     }
 
     @PostMapping("/users")
     fun addContributorToChannel(
-        @RequestBody request : UserInviteRequestDTO
+        @RequestBody request: UserInviteRequestDTO
     ): ResponseEntity<ChannelDevice> {
-        sendbirdChannelService.addUserToChannel(
-            request.channelId,
-            request.deviceId)
+        sendbirdChannelService.addUsersToChannel(request.channelId, request.deviceIds)
+        channelService.addContributorsToChannel(request)
 
-        val channelDevice = channelService.addContributorToChannel(
-            request.channelId,
-            request.deviceId)
-
-        return ResponseEntity.ok(channelDevice)
+        return ResponseEntity(HttpStatus.CREATED)
     }
-
-//    @GetMapping("/{channelId}/devices")
-//    fun getDevicesInChannel(
-//        @PathVariable channelId: UUID
-//    ): ResponseEntity<List<ChannelDeviceDTO>> {
-//        val devices = channelService.getDevicesInChannel(channelId)
-//        return ResponseEntity.ok(devices)
-//    }
 }
