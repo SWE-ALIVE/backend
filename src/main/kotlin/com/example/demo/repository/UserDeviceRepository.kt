@@ -7,6 +7,5 @@ import java.util.*
 
 @Repository
 interface UserDeviceRepository : JpaRepository<UserDevice, UUID> {
-
     fun findUserDeviceByUserIdAndDeviceId(userId: UUID, deviceId: UUID): UserDevice
 }

@@ -21,7 +21,6 @@ class ChannelService(
     private val deviceRepository: DeviceRepository,
     private val channelDeviceRepository: ChannelDeviceRepository
 ) {
-
     @Transactional
     fun createChannel(request: CreateChannelRequest): Channel {
         val user = userRepository.findById(UUID.fromString(request.operatorIds.first()))

@@ -7,7 +7,6 @@ import org.springframework.data.repository.query.Param
 import java.util.*
 
 interface UserRepository : JpaRepository<User, UUID> {
-
     fun findByPhoneNumber(phoneNumber: String): Optional<User>
 
     fun findByPhoneNumberAndPassword(phoneNumber: String, password: String): Optional<User>

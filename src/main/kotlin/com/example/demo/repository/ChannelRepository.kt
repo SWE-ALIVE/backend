@@ -6,5 +6,4 @@ import org.springframework.stereotype.Repository
 import java.util.*
 
 @Repository
-interface ChannelRepository : JpaRepository<Channel, UUID> {
-}
+interface ChannelRepository : JpaRepository<Channel, UUID>
