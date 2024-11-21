@@ -20,15 +20,12 @@ class DeviceUsageRecordController(
 ) {
 
     @PostMapping("/add")
-    fun addDeviceUsageRecord (
+    fun addDeviceUsageRecord(
         @RequestBody request: DeviceUsageCreateDTO
     ): ResponseEntity<String> {
-        return try {
-            deviceUsageRecordService.addDeviceUsageRecord(request)
-            ResponseEntity<String>("Record added successfully", HttpStatus.OK)
-        } catch (e : Exception) {
-            ResponseEntity<String>(e.message, HttpStatus.BAD_REQUEST)
-        }
+        deviceUsageRecordService.addDeviceUsageRecord(request)
+
+        return ResponseEntity<String>("Record added successfully", HttpStatus.OK)
     }
 
     @PostMapping

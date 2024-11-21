@@ -33,13 +33,10 @@ class DeviceController(
     fun deleteDevice(
         @PathVariable deviceId: UUID
     ): ResponseEntity<String> {
-        return try {
-            sendbirdUserService.deleteUser(deviceId.toString())
-            deviceService.deleteDevice(deviceId)
-            ResponseEntity<String>("Device deleted successfully", HttpStatus.OK)
-        } catch (e: Exception) {
-            ResponseEntity<String>(e.message, HttpStatus.BAD_REQUEST)
-        }
+        sendbirdUserService.deleteUser(deviceId.toString())
+        deviceService.deleteDevice(deviceId)
+
+        return ResponseEntity<String>("Device deleted successfully", HttpStatus.OK)
     }
 
     @GetMapping("/users/{userId}")
@@ -55,7 +52,7 @@ class DeviceController(
                 deviceId = userDevice.device.id,  // Device의 ID
                 deviceName = userDevice.device.productNumber // 장치 이름
             )
-        }.let { ResponseEntity.ok(it) }
+        }.let { ResponseEntity(it, HttpStatus.OK) }
     }
 
     @PatchMapping("/status")
