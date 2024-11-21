@@ -4,6 +4,7 @@ import com.example.demo.dto.ChannelDeviceDTO
 import com.example.demo.dto.CreateChannelRequest
 import com.example.demo.dto.UserInviteRequestDTO
 import com.example.demo.model.Channel
+import com.example.demo.model.Device
 import com.example.demo.repository.ChannelDeviceRepository
 import com.example.demo.repository.ChannelRepository
 import com.example.demo.repository.DeviceRepository
@@ -11,6 +12,7 @@ import com.example.demo.repository.UserRepository
 import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
 import java.util.*
+import kotlin.NoSuchElementException
 
 @Service
 class ChannelService(
@@ -63,14 +65,29 @@ class ChannelService(
     fun addContributorsToChannel(requestDTO: UserInviteRequestDTO) {
         val channelId = UUID.fromString(requestDTO.channelId)
         val deviceIds = requestDTO.deviceIds.map { UUID.fromString(it) }
-
         val channel = channelRepository.findById(channelId)
             .orElseThrow { NoSuchElementException("Channel with ID $channelId not found") }
 
-        // 장치들 조회
+        val devices = retrieveAndValidateDevices(channel, deviceIds)
+
+        // 장치들을 채널에 추가
+        devices.forEach { device ->
+            channel.addDevice(device)
+        }
+        channelRepository.save(channel)
+    }
+
+    /**
+     * 장치들을 조회하고, 존재 여부 및 중복 여부를 확인합니다.
+     * 중복된 장치가 있으면 예외를 던집니다.
+     * 존재하지 않는 장치가 있으면 예외를 던집니다.
+     * 유효한 장치 리스트를 반환합니다.
+     */
+    private fun retrieveAndValidateDevices(channel: Channel, deviceIds: List<UUID>): List<Device> {
+        // 요청된 모든 장치 조회
         val devices = deviceRepository.findAllById(deviceIds)
 
-        // 모든 장치가 존재하는지 확인
+        // 존재하지 않는 장치 ID 확인
         val foundDeviceIds = devices.map { it.id }.toSet()
         val missingDeviceIds = deviceIds.toSet() - foundDeviceIds
 
@@ -78,10 +95,14 @@ class ChannelService(
             throw NoSuchElementException("Devices with IDs $missingDeviceIds not found")
         }
 
-        // 장치들을 채널에 추가
-        devices.forEach { device ->
-            channel.addDevice(device)
+        // 이미 채널에 속해있는 장치 ID 확인
+        val existingDeviceIds = channel.channelDevices.map { it.device.id }.toSet()
+        val duplicateDeviceIds = deviceIds.filter { it in existingDeviceIds }
+
+        if (duplicateDeviceIds.isNotEmpty()) {
+            throw IllegalArgumentException("Devices with IDs $duplicateDeviceIds are already part of the channel")
         }
-        channelRepository.save(channel)
+
+        return devices
     }
 }
