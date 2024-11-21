@@ -7,7 +7,6 @@ import java.util.UUID
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy::class)
 data class SendbirdChannelCreateRequest(
     val name: String,
-    val channelId: String,
     val deviceIds: List<String>,
     val operatorIds: List<String>
 )

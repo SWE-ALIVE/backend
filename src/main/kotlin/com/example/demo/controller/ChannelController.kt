@@ -27,13 +27,12 @@ class ChannelController(
         @RequestBody sendbirdChannelCreateRequest: SendbirdChannelCreateRequest
     ): ResponseEntity<Channel> {
         sendbirdChannelService.createGroupChannel(sendbirdChannelCreateRequest)
-
         return ResponseEntity(channelService.createChannel(sendbirdChannelCreateRequest), HttpStatus.CREATED)
     }
 
     @DeleteMapping
     fun deleteChannel(
-        @RequestParam channelId: String
+        @RequestParam("channel_id") channelId: String
     ): ResponseEntity<String> {
         return try {
             sendbirdChannelService.deleteGroupChannel(channelId)
@@ -68,16 +67,16 @@ class ChannelController(
     fun getUsersInChannel(
         @PathVariable channelId: String
     ): ResponseEntity<List<ChannelDeviceDTO>> {
-
-        return ResponseEntity(sendbirdChannelService.getUsersInChannel(channelId), HttpStatus.OK)
+        return ResponseEntity(channelService.getContributorsInChannel(channelId), HttpStatus.OK)
+//        sendbirdChannelService.getUsersInChannel(channelId)
     }
 
     @PostMapping("/users")
     fun addContributorToChannel(
         @RequestBody request: UserInviteRequestDTO
-    ): ResponseEntity<ChannelDevice> {
-        sendbirdChannelService.addUsersToChannel(request.channelId, request.deviceIds)
+    ): ResponseEntity<Void> {
         channelService.addContributorsToChannel(request)
+        sendbirdChannelService.addUsersToChannel(request.channelId, request.deviceIds)
 
         return ResponseEntity(HttpStatus.CREATED)
     }

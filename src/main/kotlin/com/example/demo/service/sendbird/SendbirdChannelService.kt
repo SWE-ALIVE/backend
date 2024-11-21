@@ -31,7 +31,6 @@ class SendbirdChannelService(
         val url = apiHelper.buildUrl("group_channels")
         val body = mapOf(
             "name" to request.name,
-            "channel_url" to request.channelId,
             "user_ids" to request.deviceIds,
             "operator_ids" to request.operatorIds
         )

@@ -1,5 +1,6 @@
 package com.example.demo.service
 
+import com.example.demo.dto.ChannelDeviceDTO
 import com.example.demo.dto.UserInviteRequestDTO
 import com.example.demo.dto.sendbird.SendbirdChannelCreateRequest
 import com.example.demo.model.Channel
@@ -13,7 +14,8 @@ import java.util.*
 class ChannelService(
     private val channelRepository: ChannelRepository,
     private val userRepository: UserRepository,
-    private val deviceRepository: DeviceRepository
+    private val deviceRepository: DeviceRepository,
+    private val channelDeviceRepository: ChannelDeviceRepository
 ) {
 
     @Transactional
@@ -45,6 +47,18 @@ class ChannelService(
         channelRepository.deleteById(id)
     }
 
+    fun getContributorsInChannel(channelId: String): List<ChannelDeviceDTO> {
+        val channelDevices = channelDeviceRepository.findByChannelId(UUID.fromString(channelId))
+        println(channelDevices.size)
+        return channelDevices.map { channelDevice ->
+            ChannelDeviceDTO(
+                id = channelDevice.device.id.toString(),
+                name = channelDevice.device.productNumber,
+                category = channelDevice.device.category.toString()
+            )
+        }
+    }
+
     @Transactional
     fun addContributorsToChannel(requestDTO: UserInviteRequestDTO) {
         val channelId = UUID.fromString(requestDTO.channelId)
@@ -66,7 +80,15 @@ class ChannelService(
 
         // 장치들을 채널에 추가
         devices.forEach { device ->
+            val channelDevice = ChannelDevice(
+                id = UUID.randomUUID(),
+                channel = channel,
+                device = device,
+                deviceStatus = true
+            )
             channel.addDevice(device)
+            channelDeviceRepository.save(channelDevice)
         }
+        channelRepository.save(channel)
     }
 }
