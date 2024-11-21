@@ -3,10 +3,13 @@ package com.example.demo.controller
 import com.example.demo.dto.ChatRoomResponseDTO
 import com.example.demo.dto.UserDTO
 import com.example.demo.dto.UserDeviceDTO
+import com.example.demo.dto.user.UserCreateRequestDTO
+import com.example.demo.dto.user.UserDTO
 import com.example.demo.exception.UserNotFoundException
 import com.example.demo.model.User
 import com.example.demo.service.UserService
 import com.example.demo.service.sendbird.SendbirdUserService
+import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -19,13 +22,32 @@ class UserController(
     private val sendbirdUserService: SendbirdUserService
 ) {
 
-    @PostMapping("/SignUp")
-    fun createUser(@RequestBody request: User): User {
-        sendbirdUserService.createUser(request.id.toString(), request.name, "")
-        return userService.createUser(request)
+    @PostMapping("/signup")
+    fun createUser(@RequestBody request: UserCreateRequestDTO): UserDTO {
+        val user = User(
+            id = UUID.randomUUID(),
+            name = request.name,
+            password = request.password,
+            birthDate = request.birthDate,
+            phoneNumber = request.phoneNumber
+        )
+        sendbirdUserService.createUser(user.id.toString(), request.name, "")
+        return userService.createUser(user)
     }
 
-    // 모든 사용자 조회
+    @DeleteMapping("/users/{userId}")
+    fun deleteUser(
+        @PathVariable userId: UUID
+    ): ResponseEntity<String> {
+        return try {
+            sendbirdUserService.deleteUser(userId.toString())
+            userService.deleteUser(userId)
+            ResponseEntity<String>("User deleted successfully", HttpStatus.OK)
+        } catch (e: Exception) {
+            ResponseEntity<String>(e.message, HttpStatus.BAD_REQUEST)
+        }
+    }
+
     @GetMapping("/users")
     fun getAllUsers(): List<UserDTO> {
         // User 리스트를 가져오고 DTO로 변환
@@ -43,8 +65,11 @@ class UserController(
 
     @PostMapping("/user")
     fun getUser(@RequestBody request: String): UserDTO {
+        val mapper = ObjectMapper()
+        val phoneNumber = mapper.readTree(request).get("phone_number").asText()
+
         // User 리스트를 가져오고 DTO로 변환
-        val user: User = userService.getUserByPhoneNumber(request).get()
+        val user: User = userService.getUserByPhoneNumber(phoneNumber).get()
 
         return UserDTO(
             id = user.id,
@@ -53,20 +78,6 @@ class UserController(
             phoneNumber = user.phoneNumber,
         )
     }
-
-    @DeleteMapping("/users/{userId}")
-    fun deleteUser(
-        @PathVariable userId: UUID
-    ): ResponseEntity<String> {
-        return try {
-            sendbirdUserService.deleteUser(userId.toString())
-            userService.deleteUser(userId)
-            ResponseEntity<String>("User deleted successfully", HttpStatus.OK)
-        } catch (e: Exception) {
-            ResponseEntity<String>(e.message, HttpStatus.BAD_REQUEST)
-        }
-    }
-
 
     @GetMapping("/users/{userId}/devices")
     fun getUserDevices(@PathVariable userId: UUID): ResponseEntity<List<UserDeviceDTO>> {

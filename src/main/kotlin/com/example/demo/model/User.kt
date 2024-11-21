@@ -1,6 +1,7 @@
 package com.example.demo.model
 
 import com.fasterxml.jackson.annotation.JsonManagedReference
+import com.fasterxml.jackson.annotation.JsonProperty
 import jakarta.persistence.*
 import jakarta.validation.constraints.Pattern
 import jakarta.validation.constraints.Size
@@ -10,7 +11,7 @@ import java.time.LocalDateTime.now
 import java.util.*
 
 @Entity
-@Table(name = "user")
+@Table(name = "\"user\"")
 data class User(
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -29,12 +30,15 @@ data class User(
     val password: String,
 
     @Column(nullable = false)
+    @JsonProperty("birth_date")
     val birthDate: LocalDate,
 
     @Column(nullable = false, unique = true)
+    @JsonProperty("phone_number")
     val phoneNumber: String,
 
     @Column(nullable = false)
+    @JsonProperty("created_at")
     val createdAt: LocalDateTime = now(),
 
     @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL])
@@ -43,5 +47,5 @@ data class User(
 
     @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL])
     @JsonManagedReference // 순환 참조의 시작
-    val chatRooms: MutableList<ChatRoom> = mutableListOf()
+    val channels: MutableList<Channel> = mutableListOf()
 )
