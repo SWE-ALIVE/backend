@@ -19,12 +19,12 @@ class SendbirdChannelController(
         return sendbirdChannelService.getGroupChannelsByUserId(userId)
     }
 
-    @PostMapping
-    fun createGroupChannel(
-        @RequestBody sendbirdChannelCreateRequest: SendbirdChannelCreateRequest
-    ): ResponseEntity<String> {
-        return sendbirdChannelService.createGroupChannel(sendbirdChannelCreateRequest)
-    }
+//    @PostMapping
+//    fun createGroupChannel(
+//        @RequestBody sendbirdChannelCreateRequest: SendbirdChannelCreateRequest
+//    ): ResponseEntity<String> {
+//        return sendbirdChannelService.createGroupChannel(sendbirdChannelCreateRequest)
+//    }
 
     @DeleteMapping
     fun deleteGroupChannel(

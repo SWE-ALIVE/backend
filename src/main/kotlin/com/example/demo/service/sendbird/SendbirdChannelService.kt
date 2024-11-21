@@ -1,6 +1,7 @@
 package com.example.demo.service.sendbird
 
 import com.example.demo.dto.ChannelDeviceDTO
+import com.example.demo.dto.CreateChannelRequest
 import com.example.demo.dto.sendbird.SendbirdChannelCreateRequest
 import com.example.demo.model.Device
 import com.example.demo.repository.DeviceRepository
@@ -27,11 +28,11 @@ class SendbirdChannelService(
         return restTemplate.exchange(url, HttpMethod.GET, request, String::class.java)
     }
 
-    fun createGroupChannel(request: SendbirdChannelCreateRequest): ResponseEntity<String> {
+    fun createGroupChannel(request: CreateChannelRequest, channelId: String): ResponseEntity<String> {
         val url = apiHelper.buildUrl("group_channels")
         val body = mapOf(
             "name" to request.name,
-            "channel_url" to request.channelId,
+            "channel_url" to channelId,
             "user_ids" to request.deviceIds,
             "operator_ids" to request.operatorIds
         )

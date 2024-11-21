@@ -14,8 +14,8 @@ import java.util.UUID
 )
 data class ChannelDevice(
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    val id: UUID,
+    @GeneratedValue
+    val id: UUID = UUID.randomUUID(),
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
     @JoinColumn(name = "channel_id", nullable = false)

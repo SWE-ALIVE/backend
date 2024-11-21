@@ -2,6 +2,7 @@ package com.example.demo.controller
 
 import com.example.demo.dto.ChannelDeviceDTO
 import com.example.demo.dto.ChannelResponseDTO
+import com.example.demo.dto.CreateChannelRequest
 import com.example.demo.dto.UserInviteRequestDTO
 import com.example.demo.dto.sendbird.SendbirdChannelCreateRequest
 import com.example.demo.exception.UserNotFoundException
@@ -24,16 +25,17 @@ class ChannelController(
 ) {
     @PostMapping
     fun createChannel(
-        @RequestBody sendbirdChannelCreateRequest: SendbirdChannelCreateRequest
+        @RequestBody request: CreateChannelRequest
     ): ResponseEntity<Channel> {
-        sendbirdChannelService.createGroupChannel(sendbirdChannelCreateRequest)
+        val channel = channelService.createChannel(request)
+        sendbirdChannelService.createGroupChannel(request, channel.id.toString())
 
-        return ResponseEntity(channelService.createChannel(sendbirdChannelCreateRequest), HttpStatus.CREATED)
+        return ResponseEntity(HttpStatus.CREATED)
     }
 
     @DeleteMapping
     fun deleteChannel(
-        @RequestParam channelId: String
+        @RequestParam("channel_id") channelId: String
     ): ResponseEntity<String> {
         return try {
             sendbirdChannelService.deleteGroupChannel(channelId)
@@ -68,16 +70,16 @@ class ChannelController(
     fun getUsersInChannel(
         @PathVariable channelId: String
     ): ResponseEntity<List<ChannelDeviceDTO>> {
-
-        return ResponseEntity(sendbirdChannelService.getUsersInChannel(channelId), HttpStatus.OK)
+        return ResponseEntity(channelService.getContributorsInChannel(channelId), HttpStatus.OK)
+//        sendbirdChannelService.getUsersInChannel(channelId)
     }
 
     @PostMapping("/users")
     fun addContributorToChannel(
         @RequestBody request: UserInviteRequestDTO
-    ): ResponseEntity<ChannelDevice> {
-        sendbirdChannelService.addUsersToChannel(request.channelId, request.deviceIds)
+    ): ResponseEntity<Void> {
         channelService.addContributorsToChannel(request)
+        sendbirdChannelService.addUsersToChannel(request.channelId, request.deviceIds)
 
         return ResponseEntity(HttpStatus.CREATED)
     }

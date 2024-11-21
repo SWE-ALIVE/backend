@@ -1,10 +1,13 @@
 package com.example.demo.service
 
+import com.example.demo.dto.ChannelDeviceDTO
+import com.example.demo.dto.CreateChannelRequest
 import com.example.demo.dto.UserInviteRequestDTO
-import com.example.demo.dto.sendbird.SendbirdChannelCreateRequest
 import com.example.demo.model.Channel
-import com.example.demo.model.ChannelDevice
-import com.example.demo.repository.*
+import com.example.demo.repository.ChannelDeviceRepository
+import com.example.demo.repository.ChannelRepository
+import com.example.demo.repository.DeviceRepository
+import com.example.demo.repository.UserRepository
 import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
 import java.util.*
@@ -13,11 +16,12 @@ import java.util.*
 class ChannelService(
     private val channelRepository: ChannelRepository,
     private val userRepository: UserRepository,
-    private val deviceRepository: DeviceRepository
+    private val deviceRepository: DeviceRepository,
+    private val channelDeviceRepository: ChannelDeviceRepository
 ) {
 
     @Transactional
-    fun createChannel(request: SendbirdChannelCreateRequest): Channel {
+    fun createChannel(request: CreateChannelRequest): Channel {
         val user = userRepository.findById(UUID.fromString(request.operatorIds.first()))
             .orElseThrow { IllegalArgumentException("User with ID ${request.operatorIds.first()} not found") }
 
@@ -26,14 +30,13 @@ class ChannelService(
             user = user,
             name = request.name,
         )
+
         // 장치 추가
         for (deviceId in request.deviceIds) {
-            val device = deviceRepository.findById(UUID.fromString(deviceId))
-                .orElseThrow { NoSuchElementException("Device with ID $deviceId not found") }
-
-            channel.addDevice(device)
+            val device = deviceRepository.findById(UUID.fromString(deviceId)).orElse(null)
+            if (device != null)
+                channel.addDevice(device)
         }
-
         return channelRepository.save(channel)
     }
 
@@ -43,6 +46,17 @@ class ChannelService(
             throw NoSuchElementException("Channel with ID $id not found")
         }
         channelRepository.deleteById(id)
+    }
+
+    fun getContributorsInChannel(channelId: String): List<ChannelDeviceDTO> {
+        val channelDevices = channelDeviceRepository.findByChannelId(UUID.fromString(channelId))
+        return channelDevices.map { channelDevice ->
+            ChannelDeviceDTO(
+                id = channelDevice.device.id.toString(),
+                name = channelDevice.device.productNumber,
+                category = channelDevice.device.category.toString()
+            )
+        }
     }
 
     @Transactional
@@ -68,5 +82,6 @@ class ChannelService(
         devices.forEach { device ->
             channel.addDevice(device)
         }
+        channelRepository.save(channel)
     }
 }
