@@ -21,7 +21,7 @@ class UserController(
 ) {
 
     @PostMapping("/signup")
-    fun createUser(@RequestBody request: UserCreateRequestDTO): UserDTO {
+    fun createUser(@RequestBody request: UserCreateRequestDTO): ResponseEntity<UserDTO> {
         val user = User(
             id = UUID.randomUUID(),
             name = request.name,
@@ -30,24 +30,21 @@ class UserController(
             phoneNumber = request.phoneNumber
         )
         sendbirdUserService.createUser(user.id.toString(), request.name, "")
-        return userService.createUser(user)
+        return ResponseEntity(userService.createUser(user), HttpStatus.CREATED)
     }
 
     @DeleteMapping("/users/{userId}")
     fun deleteUser(
         @PathVariable userId: UUID
     ): ResponseEntity<String> {
-        return try {
-            sendbirdUserService.deleteUser(userId.toString())
-            userService.deleteUser(userId)
-            ResponseEntity<String>("User deleted successfully", HttpStatus.OK)
-        } catch (e: Exception) {
-            ResponseEntity<String>(e.message, HttpStatus.BAD_REQUEST)
-        }
+        sendbirdUserService.deleteUser(userId.toString())
+        userService.deleteUser(userId)
+
+        return ResponseEntity<String>("User deleted successfully", HttpStatus.OK)
     }
 
     @GetMapping("/users")
-    fun getAllUsers(): List<UserDTO> {
+    fun getAllUsers(): ResponseEntity<List<UserDTO>> {
         // User 리스트를 가져오고 DTO로 변환
         val users: List<User> = userService.getAllUsers()
 
@@ -58,11 +55,11 @@ class UserController(
                 birthDate = user.birthDate,
                 phoneNumber = user.phoneNumber,
             )
-        }
+        }.let { ResponseEntity(it, HttpStatus.OK) }
     }
 
     @PostMapping("/user")
-    fun getUser(@RequestBody request: String): UserDTO {
+    fun getUser(@RequestBody request: String): ResponseEntity<UserDTO> {
         val mapper = ObjectMapper()
         val phoneNumber = mapper.readTree(request).get("phone_number").asText()
 
@@ -74,29 +71,25 @@ class UserController(
             name = user.name,
             birthDate = user.birthDate,
             phoneNumber = user.phoneNumber,
-        )
+        ).let { ResponseEntity(it, HttpStatus.OK) }
     }
 
     @GetMapping("/users/{userId}/devices")
     fun getUserDevices(@PathVariable userId: UUID): ResponseEntity<List<UserDeviceDTO>> {
-        return try {
-            val user = userService.getUser(userId)  // 유저 조회 (UserNotFoundException 예외 발생 가능)
 
-            // 유저가 존재하면 해당 유저의 userDevices 정보를 가져와서 반환
-            val userDevicesDTO = user.userDevices.map { userDevice ->
-                // UserDevice를 통해 DeviceDTO로 변환
-                UserDeviceDTO(
-                    category = userDevice.device.category.name,  // DeviceCategory의 이름
-                    deviceId = userDevice.device.id,  // Device의 ID
-                    deviceName = userDevice.device.productNumber // 장치 이름
-                )
-            }
+        val user = userService.getUser(userId)  // 유저 조회 (UserNotFoundException 예외 발생 가능)
 
-            // 유저의 장치 목록 반환
-            ResponseEntity.ok(userDevicesDTO)
-        } catch (e: UserNotFoundException) {
-            // 유저가 존재하지 않으면 400 반환
-            ResponseEntity.badRequest().build()
+        // 유저가 존재하면 해당 유저의 userDevices 정보를 가져와서 반환
+        val userDevicesDTO = user.userDevices.map { userDevice ->
+            // UserDevice를 통해 DeviceDTO로 변환
+            UserDeviceDTO(
+                category = userDevice.device.category.name,  // DeviceCategory의 이름
+                deviceId = userDevice.device.id,  // Device의 ID
+                deviceName = userDevice.device.productNumber // 장치 이름
+            )
         }
+
+        // 유저의 장치 목록 반환
+        return ResponseEntity(userDevicesDTO, HttpStatus.OK)
     }
 }
