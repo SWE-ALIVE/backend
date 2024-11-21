@@ -50,7 +50,6 @@ class ChannelService(
 
     fun getContributorsInChannel(channelId: String): List<ChannelDeviceDTO> {
         val channelDevices = channelDeviceRepository.findByChannelId(UUID.fromString(channelId))
-        println(channelDevices.size)
         return channelDevices.map { channelDevice ->
             ChannelDeviceDTO(
                 id = channelDevice.device.id.toString(),
