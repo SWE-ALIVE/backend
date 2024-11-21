@@ -1,10 +1,12 @@
 package com.example.demo.dto
 
-import com.fasterxml.jackson.annotation.JsonProperty
+import com.fasterxml.jackson.databind.PropertyNamingStrategies
+import com.fasterxml.jackson.databind.annotation.JsonNaming
 import java.util.*
 
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy::class)
 data class DeviceStatusRequestDTO(
-    @JsonProperty("channel_id") val channelId: UUID,  // channel_id -> channelId
-    @JsonProperty("device_id") val deviceId: UUID,      // device_id -> deviceId
-    @JsonProperty("device_status") val deviceStatus: Boolean  // device_status -> deviceStatus
+    val channelId: UUID,
+    val deviceId: UUID,
+    val deviceStatus: Boolean
 )
