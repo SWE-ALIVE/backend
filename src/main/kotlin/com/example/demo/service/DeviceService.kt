@@ -49,6 +49,9 @@ class DeviceService(
 
     fun getDeviceUsageRecords(request: DeviceUsageRequestDTO): DeviceUsageResponseDTO {
 
+        val userId = request.userId
+        val deviceId = request.deviceId
+
         val userDeviceId = userDeviceRepository.findUserDeviceByUserIdAndDeviceId(request.userId, request.deviceId)
 
         val records = deviceUsageRecordRepository.findByUserDeviceId(userDeviceId.id)
@@ -62,13 +65,19 @@ class DeviceService(
 
         // 사용자와 기기를 기준으로 채팅방 필터링
         val channels = device.channelDevices
-            .filter { channelDevice -> channelDevice.channel.user.id == records.first().userDevice.user.id }
+            .filter { channelDevice ->
+                channelDevice.channel.user.id == userId && channelDevice.device.id == deviceId
+            }
             .map { channelDevice ->
                 ChannelDTO(
                     channelName = channelDevice.channel.name,
-                    channelDevices = channelDevice.channel.channelDevices.map { it.device.productNumber }
+                    channelDevices = channelDevice.channel.channelDevices
+                        .map { it.device.productNumber }
+                        .distinct()
                 )
             }
+            .distinctBy { it.channelName }
+
 
         // 사용 기록 정보 가져오기
         val actions = records.map { record ->

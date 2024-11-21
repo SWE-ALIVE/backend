@@ -1,8 +1,10 @@
 package com.example.demo.controller
 
+import com.example.demo.dto.DeviceUsageCreateDTO
 import com.example.demo.dto.DeviceUsageRequestDTO
 import com.example.demo.dto.DeviceUsageResponseDTO
 import com.example.demo.service.DeviceService
+import com.example.demo.service.DeviceUsageRecordService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
@@ -13,8 +15,22 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/v1/device-usage")
 class DeviceUsageRecordController(
-    private val deviceService: DeviceService
+    private val deviceService: DeviceService,
+    private val deviceUsageRecordService: DeviceUsageRecordService
 ) {
+
+    @PostMapping("/add")
+    fun addDeviceUsageRecord (
+        @RequestBody request: DeviceUsageCreateDTO
+    ): ResponseEntity<String> {
+        return try {
+            deviceUsageRecordService.addDeviceUsageRecord(request)
+            ResponseEntity<String>("Record added successfully", HttpStatus.OK)
+        } catch (e : Exception) {
+            ResponseEntity<String>(e.message, HttpStatus.BAD_REQUEST)
+        }
+    }
+
     @PostMapping
     fun getDeviceUsageRecords(
         @RequestBody request: DeviceUsageRequestDTO
