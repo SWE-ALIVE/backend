@@ -37,39 +37,31 @@ class ChannelController(
     fun deleteChannel(
         @RequestParam("channel_id") channelId: String
     ): ResponseEntity<String> {
-        return try {
-            sendbirdChannelService.deleteGroupChannel(channelId)
-            channelService.deleteChannel(UUID.fromString(channelId))
-            ResponseEntity<String>("channel deleted successfully", HttpStatus.OK)
-        } catch (e: Exception) {
-            ResponseEntity<String>(e.message, HttpStatus.BAD_REQUEST)
-        }
+        sendbirdChannelService.deleteGroupChannel(channelId)
+        channelService.deleteChannel(UUID.fromString(channelId))
+
+        return ResponseEntity<String>("channel deleted successfully", HttpStatus.OK)
     }
 
     @GetMapping("/{userId}")
     fun getUserChannels(@PathVariable userId: String): ResponseEntity<List<ChannelResponseDTO>> {
         // 유저 정보 가져오기
-        return try {
-            val user = userService.getUser(UUID.fromString(userId))
-            // 유저가 존재하면 해당 유저의 channels 정보를 가져와서 반환
-            val channelsDTO = user.channels.map { channel ->
-                // 채팅방 이름과 연결된 장치들을 DTO로 변환
-                val devices = channel.channelDevices.map { it.device.productNumber }
-                ChannelResponseDTO(channel.name, devices)
-            }
-            ResponseEntity.ok(channelsDTO)
-        } catch (e: UserNotFoundException) {
-            // 유저가 존재하지 않으면 404 반환
-            ResponseEntity.status(HttpStatus.NOT_FOUND).build()
-        } catch (e: Exception) {
-            ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build()
+        val user = userService.getUser(UUID.fromString(userId))
+        // 유저가 존재하면 해당 유저의 channels 정보를 가져와서 반환
+        val channelsDTO = user.channels.map { channel ->
+            // 채팅방 이름과 연결된 장치들을 DTO로 변환
+            val devices = channel.channelDevices.map { it.device.productNumber }
+            ChannelResponseDTO(channel.name, devices)
         }
+
+        return ResponseEntity(channelsDTO, HttpStatus.OK)
     }
 
     @GetMapping("/{channelId}/users")
     fun getUsersInChannel(
         @PathVariable channelId: String
     ): ResponseEntity<List<ChannelDeviceDTO>> {
+
         return ResponseEntity(channelService.getContributorsInChannel(channelId), HttpStatus.OK)
 //        sendbirdChannelService.getUsersInChannel(channelId)
     }
@@ -77,10 +69,10 @@ class ChannelController(
     @PostMapping("/users")
     fun addContributorToChannel(
         @RequestBody request: UserInviteRequestDTO
-    ): ResponseEntity<Void> {
+    ): ResponseEntity<String> {
         channelService.addContributorsToChannel(request)
         sendbirdChannelService.addUsersToChannel(request.channelId, request.deviceIds)
 
-        return ResponseEntity(HttpStatus.CREATED)
+        return ResponseEntity("Contributors added successfully", HttpStatus.OK)
     }
 }
