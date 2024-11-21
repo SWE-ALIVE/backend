@@ -46,7 +46,6 @@ class DeviceService(
 
         // 변경된 상태를 저장
         channelDeviceRepository.save(channelDevice)
-
     }
 
     fun getDeviceUsageRecords(request: DeviceUsageRequestDTO): DeviceUsageResponseDTO {
