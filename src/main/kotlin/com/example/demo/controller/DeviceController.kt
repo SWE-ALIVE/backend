@@ -21,17 +21,12 @@ class DeviceController(
     private val userService: UserService,
     private val sendbirdUserService: SendbirdUserService
 ) {
-    @PostMapping("/create")
-    fun createDevice(@RequestBody request: DeviceCreateRequestDTO): Device {
-        val device = Device(
-            id = UUID.randomUUID(),
-            productNumber = request.productNumber,
-            category = request.category,
-            extraFunction = request.extraFunction,
-        )
+    @PostMapping
+    fun createDevice(@RequestBody request: DeviceCreateRequestDTO): ResponseEntity<Device> {
+        val device = deviceService.createDevice(request)
+        sendbirdUserService.createUser(device.id.toString(), request.name, "")
 
-        sendbirdUserService.createUser(device.id.toString(), device.productNumber, "")
-        return deviceService.createDevice(device)
+        return ResponseEntity(device, HttpStatus.CREATED)
     }
 
     @DeleteMapping("/{deviceId}")
