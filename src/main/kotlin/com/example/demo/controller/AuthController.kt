@@ -2,6 +2,7 @@ package com.example.demo.controller
 
 import com.example.demo.dto.LoginRequestDTO
 import com.example.demo.dto.UserResponseDTO
+import com.example.demo.dto.user.UserDTO
 import com.example.demo.exception.UserNotFoundException
 import com.example.demo.service.UserService
 import org.springframework.http.HttpStatus
@@ -16,9 +17,9 @@ import org.springframework.web.bind.annotation.RestController
 class AuthController(private val userService: UserService) {
 
     @PostMapping("/login")
-    fun login(@RequestBody request: LoginRequestDTO): ResponseEntity<UserResponseDTO> {
+    fun login(@RequestBody request: LoginRequestDTO): ResponseEntity<UserDTO> {
         return try {
-            val userResponse: UserResponseDTO = userService.login(request)
+            val userResponse: UserDTO = userService.login(request)
             ResponseEntity.ok(userResponse)
         } catch (e: UserNotFoundException) {
             // 사용자가 없으면 401 Unauthorized 반환

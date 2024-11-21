@@ -1,28 +1,32 @@
 package com.example.demo.model
 
+import com.fasterxml.jackson.annotation.JsonBackReference
+import com.fasterxml.jackson.annotation.JsonProperty
 import jakarta.persistence.*
 import java.util.UUID
 
 @Entity
 @Table(
-    name = "chat_room_device",
+    name = "channel_device",
     uniqueConstraints = [
-        UniqueConstraint(columnNames = ["chatroom_id", "device_id"])  // chatroom_id와 device_id의 유니크 제약 추가
+        UniqueConstraint(columnNames = ["channel_id", "device_id"])  // channel_id와 device_id의 유니크 제약 추가
     ]
 )
-data class ChatRoomDevice(
+data class ChannelDevice(
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     val id: UUID,
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
-    @JoinColumn(name = "chatroom_id", nullable = false)
-    val chatRoom: ChatRoom,
+    @JoinColumn(name = "channel_id", nullable = false)
+    @JsonBackReference
+    val channel: Channel,
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
     @JoinColumn(name = "device_id", nullable = false)
+    @JsonBackReference
     val device: Device,
 
-    @Column(nullable = false)
+    @JsonProperty("device_status")
     var deviceStatus: Boolean
 )

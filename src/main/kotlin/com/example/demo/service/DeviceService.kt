@@ -1,14 +1,13 @@
 package com.example.demo.service
 
 import com.example.demo.dto.ActionDTO
-import com.example.demo.dto.ChatRoomDTO
+import com.example.demo.dto.ChannelDTO
 import com.example.demo.dto.DeviceUsageRequestDTO
 import com.example.demo.dto.DeviceUsageResponseDTO
-import com.example.demo.exception.DeviceNotFoundInChatRoomException
-import com.example.demo.repository.ChatRoomDeviceRepository
-import com.example.demo.repository.DeviceRepository
-import com.example.demo.repository.DeviceUsageRecordRepository
-import com.example.demo.repository.UserDeviceRepository
+import com.example.demo.exception.DeviceNotFoundInChannelException
+import com.example.demo.exception.UserNotFoundException
+import com.example.demo.model.Device
+import com.example.demo.repository.*
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.util.*
@@ -16,21 +15,35 @@ import java.util.*
 @Service
 class DeviceService(
     private val deviceUsageRecordRepository: DeviceUsageRecordRepository,
-    private val chatRoomDeviceRepository: ChatRoomDeviceRepository,
-    private val userDeviceRepository: UserDeviceRepository
+    private val channelDeviceRepository: ChannelDeviceRepository,
+    private val userDeviceRepository: UserDeviceRepository,
+    private val deviceRepository: DeviceRepository
 ) {
 
     @Transactional
-    fun updateDeviceStatus(chatroomId: UUID, deviceId: UUID, deviceStatus: Boolean) {
-        // ChatRoomDevice를 찾는다 (chatroomId, deviceId로 찾기)
-        val chatRoomDevice = chatRoomDeviceRepository.findByChatRoomIdAndDeviceId(chatroomId, deviceId)
-            ?: throw DeviceNotFoundInChatRoomException("Device with ID $deviceId not found in chatroom $chatroomId")
+    fun createDevice(request: Device): Device {
+        return deviceRepository.save(request)
+    }
+
+    @Transactional
+    fun deleteDevice(id: UUID) {
+        if(!deviceRepository.existsById(id)) {
+            throw UserNotFoundException("Device with id $id not found")
+        }
+        deviceRepository.deleteById(id)
+    }
+
+    @Transactional
+    fun updateDeviceStatus(channelId: UUID, deviceId: UUID, deviceStatus: Boolean) {
+
+        val channelDevice = channelDeviceRepository.findByChannelIdAndDeviceId(channelId, deviceId)
+            ?: throw DeviceNotFoundInChannelException("Device with ID $deviceId not found in channel $channelId")
         
         // 장치 상태 업데이트
-        chatRoomDevice.deviceStatus = deviceStatus
+        channelDevice.deviceStatus = deviceStatus
 
         // 변경된 상태를 저장
-        chatRoomDeviceRepository.save(chatRoomDevice)
+        channelDeviceRepository.save(channelDevice)
 
     }
 
@@ -48,12 +61,12 @@ class DeviceService(
         val device = records.first().userDevice.device
 
         // 사용자와 기기를 기준으로 채팅방 필터링
-        val chatRooms = device.chatRoomDevices
-            .filter { chatRoomDevice -> chatRoomDevice.chatRoom.user.id == records.first().userDevice.user.id }
-            .map { chatRoomDevice ->
-                ChatRoomDTO(
-                    chatRoomName = chatRoomDevice.chatRoom.name,
-                    chatRoomDevices = chatRoomDevice.chatRoom.chatRoomDevices.map { it.device.productNumber }
+        val channels = device.channelDevices
+            .filter { channelDevice -> channelDevice.channel.user.id == records.first().userDevice.user.id }
+            .map { channelDevice ->
+                ChannelDTO(
+                    channelName = channelDevice.channel.name,
+                    channelDevices = channelDevice.channel.channelDevices.map { it.device.productNumber }
                 )
             }
 
@@ -69,7 +82,7 @@ class DeviceService(
 
         val response = DeviceUsageResponseDTO(
             deviceName = device.category.name,
-            chatRooms = chatRooms,
+            channels = channels,
             actions = actions
         )
 

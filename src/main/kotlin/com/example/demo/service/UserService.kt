@@ -2,6 +2,7 @@ package com.example.demo.service
 
 import com.example.demo.dto.LoginRequestDTO
 import com.example.demo.dto.UserResponseDTO
+import com.example.demo.dto.user.UserDTO
 import com.example.demo.exception.UserNotFoundException
 import com.example.demo.model.User
 import com.example.demo.repository.UserRepository
@@ -12,7 +13,7 @@ import java.util.*
 @Service
 class UserService(private val userRepository: UserRepository) {
 
-    fun login(request: LoginRequestDTO): UserResponseDTO {
+    fun login(request: LoginRequestDTO): UserDTO {
         // 전화번호와 비밀번호로 사용자 조회. 없으면 예외 발생
         val user = userRepository.findByPhoneNumberAndPassword(
             request.phoneNumber, request.password
@@ -21,17 +22,33 @@ class UserService(private val userRepository: UserRepository) {
         }
 
         // 조회된 사용자 정보를 UserResponseDTO로 변환하여 반환
-        return UserResponseDTO(
-            id = user.id.toString(),
+        return UserDTO(
+            id = user.id,
             name = user.name,
             birthDate = user.birthDate,
             phoneNumber = user.phoneNumber
         )
     }
 
-
-    // 사용자 목록 가져오기
     @Transactional
+    fun createUser(request: User): UserDTO {
+        val user = userRepository.save(request)
+        return UserDTO(
+            id = user.id,
+            name = user.name,
+            birthDate = user.birthDate,
+            phoneNumber = user.phoneNumber
+        )
+    }
+
+    @Transactional
+    fun deleteUser(id: UUID) {
+        if(!userRepository.existsById(id)) {
+            throw UserNotFoundException("User with id $id not found")
+        }
+        userRepository.deleteById(id)
+    }
+
     fun getAllUsers(): List<User> {
         return userRepository.findAll()
     }
@@ -60,19 +77,5 @@ class UserService(private val userRepository: UserRepository) {
                 phoneNumber = updatedUser.phoneNumber
             ).also { updated -> userRepository.save(updated) }
         }
-    }
-
-    // 사용자 삭제
-    @Transactional
-    fun deleteUser(id: UUID) {
-        if(!userRepository.existsById(id)) {
-            throw UserNotFoundException("User with id $id not found")
-        }
-        userRepository.deleteById(id)
-    }
-
-    @Transactional
-    fun createUser(request: User): User {
-        return userRepository.save(request)
     }
 }

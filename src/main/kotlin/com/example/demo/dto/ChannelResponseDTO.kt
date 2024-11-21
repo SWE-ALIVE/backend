@@ -1,6 +1,6 @@
 package com.example.demo.dto
 
-data class ChatRoomResponseDTO(
-    val chatRoomName: String,
+data class ChannelResponseDTO(
+    val channelName: String,
     val devices: List<String>
 )

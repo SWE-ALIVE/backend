@@ -37,7 +37,7 @@ class SendbirdChannelController(
     fun addUserToChannel(
         @RequestBody sendbirdUserInviteRequest: SendbirdUserInviteRequest
     ): ResponseEntity<String> {
-        return sendbirdChannelService.addUserToChannel(
+        return sendbirdChannelService.addUsersToChannel(
             sendbirdUserInviteRequest.channelUrl,
             sendbirdUserInviteRequest.userIds
         )
