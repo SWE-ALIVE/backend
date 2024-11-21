@@ -24,7 +24,7 @@ data class Channel(
     @JsonManagedReference
     val chats: MutableList<Chat> = mutableListOf(),
 
-    @OneToMany(mappedBy = "channel", cascade = [CascadeType.PERSIST], fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "channel", cascade = [CascadeType.ALL], orphanRemoval = true, fetch = FetchType.LAZY)
     @JsonManagedReference
     val channelDevices: MutableList<ChannelDevice> = mutableListOf()
 ) {
@@ -36,6 +36,5 @@ data class Channel(
             deviceStatus = true
         )
         this.channelDevices.add(channelDevice)
-
     }
 }

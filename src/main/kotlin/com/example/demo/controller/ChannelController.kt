@@ -2,6 +2,7 @@ package com.example.demo.controller
 
 import com.example.demo.dto.ChannelDeviceDTO
 import com.example.demo.dto.ChannelResponseDTO
+import com.example.demo.dto.CreateChannelRequest
 import com.example.demo.dto.UserInviteRequestDTO
 import com.example.demo.dto.sendbird.SendbirdChannelCreateRequest
 import com.example.demo.exception.UserNotFoundException
@@ -24,10 +25,12 @@ class ChannelController(
 ) {
     @PostMapping
     fun createChannel(
-        @RequestBody sendbirdChannelCreateRequest: SendbirdChannelCreateRequest
+        @RequestBody request: CreateChannelRequest
     ): ResponseEntity<Channel> {
-        sendbirdChannelService.createGroupChannel(sendbirdChannelCreateRequest)
-        return ResponseEntity(channelService.createChannel(sendbirdChannelCreateRequest), HttpStatus.CREATED)
+        val channel = channelService.createChannel(request)
+        sendbirdChannelService.createGroupChannel(request, channel.id.toString())
+
+        return ResponseEntity(HttpStatus.CREATED)
     }
 
     @DeleteMapping

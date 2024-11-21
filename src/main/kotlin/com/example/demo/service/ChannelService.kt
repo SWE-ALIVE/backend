@@ -1,11 +1,13 @@
 package com.example.demo.service
 
 import com.example.demo.dto.ChannelDeviceDTO
+import com.example.demo.dto.CreateChannelRequest
 import com.example.demo.dto.UserInviteRequestDTO
-import com.example.demo.dto.sendbird.SendbirdChannelCreateRequest
 import com.example.demo.model.Channel
-import com.example.demo.model.ChannelDevice
-import com.example.demo.repository.*
+import com.example.demo.repository.ChannelDeviceRepository
+import com.example.demo.repository.ChannelRepository
+import com.example.demo.repository.DeviceRepository
+import com.example.demo.repository.UserRepository
 import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
 import java.util.*
@@ -19,7 +21,7 @@ class ChannelService(
 ) {
 
     @Transactional
-    fun createChannel(request: SendbirdChannelCreateRequest): Channel {
+    fun createChannel(request: CreateChannelRequest): Channel {
         val user = userRepository.findById(UUID.fromString(request.operatorIds.first()))
             .orElseThrow { IllegalArgumentException("User with ID ${request.operatorIds.first()} not found") }
 
@@ -28,14 +30,13 @@ class ChannelService(
             user = user,
             name = request.name,
         )
+
         // 장치 추가
         for (deviceId in request.deviceIds) {
-            val device = deviceRepository.findById(UUID.fromString(deviceId))
-                .orElseThrow { NoSuchElementException("Device with ID $deviceId not found") }
-
-            channel.addDevice(device)
+            val device = deviceRepository.findById(UUID.fromString(deviceId)).orElse(null)
+            if (device != null)
+                channel.addDevice(device)
         }
-
         return channelRepository.save(channel)
     }
 
@@ -80,14 +81,7 @@ class ChannelService(
 
         // 장치들을 채널에 추가
         devices.forEach { device ->
-            val channelDevice = ChannelDevice(
-                id = UUID.randomUUID(),
-                channel = channel,
-                device = device,
-                deviceStatus = true
-            )
             channel.addDevice(device)
-            channelDeviceRepository.save(channelDevice)
         }
         channelRepository.save(channel)
     }
