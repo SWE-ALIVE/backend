@@ -2,6 +2,7 @@ package com.example.demo.model
 
 import com.fasterxml.jackson.annotation.JsonBackReference
 import com.fasterxml.jackson.annotation.JsonManagedReference
+
 import jakarta.persistence.*
 import java.util.*
 
@@ -14,7 +15,7 @@ data class Channel(
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
     @JoinColumn(name = "user_id", nullable = false)
-    @JsonBackReference // 순환 참조의 끝
+    @JsonBackReference
     val user: User,
 
     @Column(nullable = false)
@@ -31,7 +32,7 @@ data class Channel(
     fun addDevice(device: Device) {
         val channelDevice = ChannelDevice(
             id = UUID.randomUUID(),
-            channel = this, // 현재 채널 참조
+            channel = this,
             device = device,
             deviceStatus = true
         )

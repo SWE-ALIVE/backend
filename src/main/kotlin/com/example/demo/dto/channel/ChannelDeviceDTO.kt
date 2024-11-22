@@ -1,13 +1,11 @@
-package com.example.demo.dto
+package com.example.demo.dto.channel
 
-import com.example.demo.model.DeviceCategory
 import com.fasterxml.jackson.databind.PropertyNamingStrategies
 import com.fasterxml.jackson.databind.annotation.JsonNaming
 
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy::class)
-data class DeviceCreateRequestDTO(
+data class ChannelDeviceDTO(
+    val id: String,
     val name: String,
-    val productNumber: String,
-    val category: DeviceCategory,
-    val extraFunction: String,
+    val category: String?,
 )

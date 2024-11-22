@@ -1,6 +1,7 @@
 package com.example.demo.model
 
 import com.fasterxml.jackson.annotation.JsonBackReference
+
 import jakarta.persistence.*
 import java.util.*
 
@@ -13,12 +14,12 @@ data class UserDevice(
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
-    @JsonBackReference // 순환 참조의 끝
+    @JsonBackReference
     val user: User,
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "device_id", nullable = false)
-    @JsonBackReference // 순환 참조의 끝
+    @JsonBackReference
     val device: Device,
 
     @Column(nullable = false)

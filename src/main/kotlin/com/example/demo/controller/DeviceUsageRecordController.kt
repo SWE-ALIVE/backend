@@ -1,8 +1,8 @@
 package com.example.demo.controller
 
-import com.example.demo.dto.DeviceUsageCreateDTO
-import com.example.demo.dto.DeviceUsageRequestDTO
-import com.example.demo.dto.DeviceUsageResponseDTO
+import com.example.demo.dto.device.DeviceUsageCreateDTO
+import com.example.demo.dto.device.DeviceUsageRequestDTO
+import com.example.demo.dto.device.DeviceUsageResponseDTO
 import com.example.demo.service.DeviceService
 import com.example.demo.service.DeviceUsageRecordService
 import org.springframework.http.HttpStatus

@@ -1,13 +1,10 @@
 package com.example.demo.controller
 
-import com.example.demo.dto.ChannelDeviceDTO
-import com.example.demo.dto.ChannelResponseDTO
-import com.example.demo.dto.CreateChannelRequest
-import com.example.demo.dto.UserInviteRequestDTO
-import com.example.demo.dto.sendbird.SendbirdChannelCreateRequest
-import com.example.demo.exception.UserNotFoundException
+import com.example.demo.dto.channel.ChannelDeviceDTO
+import com.example.demo.dto.channel.ChannelResponseDTO
+import com.example.demo.dto.channel.CreateChannelRequest
+import com.example.demo.dto.user.UserInviteRequestDTO
 import com.example.demo.model.Channel
-import com.example.demo.model.ChannelDevice
 import com.example.demo.service.ChannelService
 import com.example.demo.service.UserService
 import com.example.demo.service.sendbird.SendbirdChannelService

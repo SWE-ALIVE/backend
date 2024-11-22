@@ -1,7 +1,6 @@
 package com.example.demo.service
 
 import com.example.demo.dto.LoginRequestDTO
-import com.example.demo.dto.UserResponseDTO
 import com.example.demo.dto.user.UserDTO
 import com.example.demo.exception.UserNotFoundException
 import com.example.demo.model.User

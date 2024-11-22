@@ -1,8 +1,8 @@
 package com.example.demo.service
 
-import com.example.demo.dto.ChannelDeviceDTO
-import com.example.demo.dto.CreateChannelRequest
-import com.example.demo.dto.UserInviteRequestDTO
+import com.example.demo.dto.channel.ChannelDeviceDTO
+import com.example.demo.dto.channel.CreateChannelRequest
+import com.example.demo.dto.user.UserInviteRequestDTO
 import com.example.demo.model.Channel
 import com.example.demo.model.Device
 import com.example.demo.repository.ChannelDeviceRepository

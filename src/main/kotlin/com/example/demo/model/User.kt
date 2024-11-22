@@ -2,9 +2,11 @@ package com.example.demo.model
 
 import com.fasterxml.jackson.annotation.JsonManagedReference
 import com.fasterxml.jackson.annotation.JsonProperty
+
 import jakarta.persistence.*
 import jakarta.validation.constraints.Pattern
 import jakarta.validation.constraints.Size
+
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalDateTime.now

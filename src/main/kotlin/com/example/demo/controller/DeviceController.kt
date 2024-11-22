@@ -1,10 +1,8 @@
 package com.example.demo.controller
 
-import com.example.demo.dto.DeviceCreateRequestDTO
-import com.example.demo.dto.DeviceStatusRequestDTO
+import com.example.demo.dto.device.DeviceCreateRequestDTO
+import com.example.demo.dto.device.DeviceStatusRequestDTO
 import com.example.demo.dto.UserDeviceDTO
-import com.example.demo.exception.DeviceNotFoundInChannelException
-import com.example.demo.exception.UserNotFoundException
 import com.example.demo.model.Device
 import com.example.demo.service.DeviceService
 import com.example.demo.service.UserService
