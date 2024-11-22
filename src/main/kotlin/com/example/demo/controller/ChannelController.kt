@@ -44,22 +44,8 @@ class ChannelController(
     fun getUserChannels(@PathVariable userId: String): ResponseEntity<List<ChannelResponseDTO>> {
         // 유저 정보 가져오기
         val user = userService.getUser(UUID.fromString(userId))
-        // 유저가 존재하면 해당 유저의 channels 정보를 가져와서 반환
-        val channelsDTO = user.channels.map { channel ->
-            // 채팅방 이름과 연결된 장치들을 DTO로 변환
-            val devices = channel.channelDevices.map { it.device.productNumber }
-            ChannelResponseDTO(channel.id.toString(), channel.name, devices)
-        }
 
-        return ResponseEntity(channelsDTO, HttpStatus.OK)
-    }
-
-    @GetMapping("/{channelId}/users")
-    fun getUsersInChannel(
-        @PathVariable channelId: String
-    ): ResponseEntity<List<ChannelDeviceDTO>> {
-
-        return ResponseEntity(sendbirdChannelService.getUsersInChannel(channelId), HttpStatus.OK)
+        return ResponseEntity(channelService.getChannelsWithDevices(user), HttpStatus.OK)
     }
 
     @PostMapping("/users")
