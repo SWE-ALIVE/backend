@@ -1,6 +1,10 @@
 package com.example.demo.service
 
 import com.example.demo.dto.*
+import com.example.demo.dto.channel.ChannelDTO
+import com.example.demo.dto.device.DeviceCreateRequestDTO
+import com.example.demo.dto.device.DeviceUsageRequestDTO
+import com.example.demo.dto.device.DeviceUsageResponseDTO
 import com.example.demo.exception.DeviceNotFoundInChannelException
 import com.example.demo.exception.UserNotFoundException
 import com.example.demo.model.Device

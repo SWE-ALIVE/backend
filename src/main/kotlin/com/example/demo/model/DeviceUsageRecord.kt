@@ -2,11 +2,11 @@ package com.example.demo.model
 
 import com.fasterxml.jackson.annotation.JsonBackReference
 import com.fasterxml.jackson.annotation.JsonProperty
+
 import jakarta.persistence.*
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.util.*
-
 
 @Entity
 @Table(name = "device_usage_record")

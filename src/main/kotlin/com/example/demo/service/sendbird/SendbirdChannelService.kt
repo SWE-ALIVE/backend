@@ -1,8 +1,7 @@
 package com.example.demo.service.sendbird
 
-import com.example.demo.dto.ChannelDeviceDTO
-import com.example.demo.dto.CreateChannelRequest
-import com.example.demo.dto.sendbird.SendbirdChannelCreateRequest
+import com.example.demo.dto.channel.ChannelDeviceDTO
+import com.example.demo.dto.channel.CreateChannelRequest
 import com.example.demo.model.Device
 import com.example.demo.repository.DeviceRepository
 import com.example.demo.util.SendbirdApiHelper

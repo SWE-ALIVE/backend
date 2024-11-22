@@ -2,6 +2,7 @@ package com.example.demo.model
 
 import com.fasterxml.jackson.annotation.JsonManagedReference
 import com.fasterxml.jackson.annotation.JsonProperty
+
 import jakarta.persistence.*
 import java.time.LocalDateTime
 import java.util.*

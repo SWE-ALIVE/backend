@@ -1,8 +1,7 @@
 package com.example.demo.service
 
-import com.example.demo.dto.DeviceUsageCreateDTO
+import com.example.demo.dto.device.DeviceUsageCreateDTO
 import com.example.demo.model.DeviceUsageRecord
-import com.example.demo.model.UserDevice
 import com.example.demo.repository.DeviceUsageRecordRepository
 import kotlin.random.Random
 import com.example.demo.repository.UserDeviceRepository
