@@ -1,9 +1,6 @@
 package com.example.demo.service
 
-import com.example.demo.dto.ActionDTO
-import com.example.demo.dto.ChannelDTO
-import com.example.demo.dto.DeviceUsageRequestDTO
-import com.example.demo.dto.DeviceUsageResponseDTO
+import com.example.demo.dto.*
 import com.example.demo.exception.DeviceNotFoundInChannelException
 import com.example.demo.exception.UserNotFoundException
 import com.example.demo.model.Device
@@ -21,8 +18,13 @@ class DeviceService(
 ) {
 
     @Transactional
-    fun createDevice(request: Device): Device {
-        return deviceRepository.save(request)
+    fun createDevice(request: DeviceCreateRequestDTO): Device {
+        return Device(
+            id = UUID.randomUUID(),
+            productNumber = request.name,
+            category = request.category,
+            extraFunction = request.extraFunction
+        ).let { deviceRepository.save(it) }
     }
 
     @Transactional
@@ -44,13 +46,9 @@ class DeviceService(
 
         // 변경된 상태를 저장
         channelDeviceRepository.save(channelDevice)
-
     }
 
     fun getDeviceUsageRecords(request: DeviceUsageRequestDTO): DeviceUsageResponseDTO {
-
-        val userId = request.userId
-        val deviceId = request.deviceId
 
         val userDeviceId = userDeviceRepository.findUserDeviceByUserIdAndDeviceId(request.userId, request.deviceId)
 
@@ -65,19 +63,13 @@ class DeviceService(
 
         // 사용자와 기기를 기준으로 채팅방 필터링
         val channels = device.channelDevices
-            .filter { channelDevice ->
-                channelDevice.channel.user.id == userId && channelDevice.device.id == deviceId
-            }
+            .filter { channelDevice -> channelDevice.channel.user.id == records.first().userDevice.user.id }
             .map { channelDevice ->
                 ChannelDTO(
                     channelName = channelDevice.channel.name,
-                    channelDevices = channelDevice.channel.channelDevices
-                        .map { it.device.productNumber }
-                        .distinct()
+                    channelDevices = channelDevice.channel.channelDevices.map { it.device.productNumber }
                 )
             }
-            .distinctBy { it.channelName }
-
 
         // 사용 기록 정보 가져오기
         val actions = records.map { record ->

@@ -1,17 +1,13 @@
 package com.example.demo.dto.user
 
-import com.fasterxml.jackson.annotation.JsonProperty
+import com.fasterxml.jackson.databind.PropertyNamingStrategies
+import com.fasterxml.jackson.databind.annotation.JsonNaming
 import java.time.LocalDate
 
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy::class)
 data class UserCreateRequestDTO(
-
     val name: String,
-
-    @JsonProperty("birth_date")
     val birthDate: LocalDate,
-
     val password: String,
-
-    @JsonProperty("phone_number")
     val phoneNumber: String
 )

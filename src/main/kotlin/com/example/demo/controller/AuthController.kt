@@ -18,15 +18,8 @@ class AuthController(private val userService: UserService) {
 
     @PostMapping("/login")
     fun login(@RequestBody request: LoginRequestDTO): ResponseEntity<UserDTO> {
-        return try {
-            val userResponse: UserDTO = userService.login(request)
-            ResponseEntity.ok(userResponse)
-        } catch (e: UserNotFoundException) {
-            // 사용자가 없으면 401 Unauthorized 반환
-            ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()
-        } catch (e: Exception) {
-            // 그 외의 예외는 500 Internal Server Error 반환
-            ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+        val userResponse: UserDTO = userService.login(request)
+
+        return ResponseEntity(userResponse, HttpStatus.OK)
     }
 }

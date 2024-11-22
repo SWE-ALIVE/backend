@@ -1,8 +1,10 @@
 package com.example.demo.dto
 
-import com.fasterxml.jackson.annotation.JsonProperty
+import com.fasterxml.jackson.databind.PropertyNamingStrategies
+import com.fasterxml.jackson.databind.annotation.JsonNaming
 
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy::class)
 data class LoginRequestDTO(
-    @JsonProperty("phone_number") val phoneNumber: String,  // phone_number -> phoneNumber
-    @JsonProperty("password") val password: String
+    val phoneNumber: String,
+    val password: String
 )
