@@ -3,7 +3,6 @@ package com.example.demo.controller
 import com.example.demo.dto.UserDeviceDTO
 import com.example.demo.dto.user.UserCreateRequestDTO
 import com.example.demo.dto.user.UserDTO
-import com.example.demo.exception.UserNotFoundException
 import com.example.demo.model.User
 import com.example.demo.service.UserService
 import com.example.demo.service.sendbird.SendbirdUserService
