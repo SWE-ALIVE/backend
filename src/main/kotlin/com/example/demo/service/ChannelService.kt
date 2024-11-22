@@ -1,14 +1,17 @@
 package com.example.demo.service
 
 import com.example.demo.dto.channel.ChannelDeviceDTO
+import com.example.demo.dto.channel.ChannelResponseDTO
 import com.example.demo.dto.channel.CreateChannelRequest
 import com.example.demo.dto.user.UserInviteRequestDTO
 import com.example.demo.model.Channel
 import com.example.demo.model.Device
+import com.example.demo.model.User
 import com.example.demo.repository.ChannelDeviceRepository
 import com.example.demo.repository.ChannelRepository
 import com.example.demo.repository.DeviceRepository
 import com.example.demo.repository.UserRepository
+import com.example.demo.service.sendbird.SendbirdChannelService
 import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
 import java.util.*
@@ -19,7 +22,8 @@ class ChannelService(
     private val channelRepository: ChannelRepository,
     private val userRepository: UserRepository,
     private val deviceRepository: DeviceRepository,
-    private val channelDeviceRepository: ChannelDeviceRepository
+    private val channelDeviceRepository: ChannelDeviceRepository,
+    private val sendbirdChannelService: SendbirdChannelService
 ) {
     @Transactional
     fun createChannel(request: CreateChannelRequest): Channel {
@@ -49,14 +53,15 @@ class ChannelService(
         channelRepository.deleteById(id)
     }
 
-    fun getContributorsInChannel(channelId: String): List<ChannelDeviceDTO> {
-        val channelDevices = channelDeviceRepository.findByChannelId(UUID.fromString(channelId))
-        return channelDevices.map { channelDevice ->
-            ChannelDeviceDTO(
-                id = channelDevice.device.id.toString(),
-                name = channelDevice.device.productNumber,
-                category = channelDevice.device.category.toString()
-            )
+    fun getChannelsWithDevices(user: User): List<ChannelResponseDTO> {
+        return user.channels.map { channel ->
+            // 채팅방 이름과 연결된 장치들을 DTO로 변환
+            val devices = sendbirdChannelService.getUsersInChannel(channel.id.toString())
+            devices.forEach { device ->
+                val channelDevice = channel.channelDevices.find { it.device.id == UUID.fromString(device.id) }
+                device.deviceStatus = channelDevice?.deviceStatus
+            }
+            ChannelResponseDTO(channel.id.toString(), channel.name, devices)
         }
     }
 

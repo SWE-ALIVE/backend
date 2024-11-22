@@ -57,25 +57,8 @@ class UserController(
         }.let { ResponseEntity(it, HttpStatus.OK) }
     }
 
-    @PostMapping("/user")
-    fun getUser(@RequestBody request: String): ResponseEntity<UserDTO> {
-        val mapper = ObjectMapper()
-        val phoneNumber = mapper.readTree(request).get("phone_number").asText()
-
-        // User 리스트를 가져오고 DTO로 변환
-        val user: User = userService.getUserByPhoneNumber(phoneNumber).get()
-
-        return UserDTO(
-            id = user.id,
-            name = user.name,
-            birthDate = user.birthDate,
-            phoneNumber = user.phoneNumber,
-        ).let { ResponseEntity(it, HttpStatus.OK) }
-    }
-
     @GetMapping("/users/{userId}/devices")
     fun getUserDevices(@PathVariable userId: UUID): ResponseEntity<List<UserDeviceDTO>> {
-
         val user = userService.getUser(userId)  // 유저 조회 (UserNotFoundException 예외 발생 가능)
 
         // 유저가 존재하면 해당 유저의 userDevices 정보를 가져와서 반환
