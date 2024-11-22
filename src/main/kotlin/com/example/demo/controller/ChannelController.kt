@@ -48,7 +48,7 @@ class ChannelController(
         val channelsDTO = user.channels.map { channel ->
             // 채팅방 이름과 연결된 장치들을 DTO로 변환
             val devices = channel.channelDevices.map { it.device.productNumber }
-            ChannelResponseDTO(channel.id.toString(),channel.name, devices)
+            ChannelResponseDTO(channel.id.toString(), channel.name, devices)
         }
 
         return ResponseEntity(channelsDTO, HttpStatus.OK)
@@ -59,8 +59,7 @@ class ChannelController(
         @PathVariable channelId: String
     ): ResponseEntity<List<ChannelDeviceDTO>> {
 
-        return ResponseEntity(channelService.getContributorsInChannel(channelId), HttpStatus.OK)
-//        sendbirdChannelService.getUsersInChannel(channelId)
+        return ResponseEntity(sendbirdChannelService.getUsersInChannel(channelId), HttpStatus.OK)
     }
 
     @PostMapping("/users")
