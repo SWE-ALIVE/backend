@@ -20,16 +20,11 @@ class UserController(
 ) {
 
     @PostMapping("/signup")
-    fun createUser(@RequestBody request: UserCreateRequestDTO): ResponseEntity<UserDTO> {
-        val user = User(
-            id = UUID.randomUUID(),
-            name = request.name,
-            password = request.password,
-            birthDate = request.birthDate,
-            phoneNumber = request.phoneNumber
-        )
+    fun createUser(@RequestBody request: UserCreateRequestDTO): ResponseEntity<User> {
+        val user = userService.createUser(request)
         sendbirdUserService.createUser(user.id.toString(), request.name, "")
-        return ResponseEntity(userService.createUser(user), HttpStatus.CREATED)
+
+        return ResponseEntity(user, HttpStatus.CREATED)
     }
 
     @DeleteMapping("/users/{userId}")
