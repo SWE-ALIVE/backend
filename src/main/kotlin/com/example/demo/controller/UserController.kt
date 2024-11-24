@@ -1,16 +1,13 @@
 package com.example.demo.controller
 
-import com.example.demo.dto.UserDeviceDTO
 import com.example.demo.dto.user.UserCreateRequestDTO
 import com.example.demo.dto.user.UserDTO
 import com.example.demo.model.User
 import com.example.demo.service.UserService
 import com.example.demo.service.sendbird.SendbirdUserService
-
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
-
 import java.util.*
 
 @RestController
