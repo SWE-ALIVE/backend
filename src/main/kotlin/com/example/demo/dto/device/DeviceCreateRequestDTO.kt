@@ -7,7 +7,7 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy::class)
 data class DeviceCreateRequestDTO(
     val name: String,
-    val productNumber: String,
+    val nickname: String,
     val category: DeviceCategory,
     val extraFunction: String,
 )
