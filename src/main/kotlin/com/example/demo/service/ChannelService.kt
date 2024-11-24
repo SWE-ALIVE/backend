@@ -42,6 +42,7 @@ class ChannelService(
             if (device != null)
                 channel.addDevice(device)
         }
+
         return channelRepository.save(channel)
     }
 
@@ -66,9 +67,9 @@ class ChannelService(
     }
 
     @Transactional
-    fun addContributorsToChannel(requestDTO: UserInviteRequestDTO) {
-        val channelId = UUID.fromString(requestDTO.channelId)
-        val deviceIds = requestDTO.deviceIds.map { UUID.fromString(it) }
+    fun addContributorsToChannel(request: UserInviteRequestDTO) {
+        val channelId = UUID.fromString(request.channelId)
+        val deviceIds = request.deviceIds.map { UUID.fromString(it) }
         val channel = channelRepository.findById(channelId)
             .orElseThrow { NoSuchElementException("Channel with ID $channelId not found") }
 

@@ -34,8 +34,8 @@ class ChannelController(
     fun deleteChannel(
         @RequestParam("channel_id") channelId: String
     ): ResponseEntity<String> {
-        sendbirdChannelService.deleteGroupChannel(channelId)
         channelService.deleteChannel(UUID.fromString(channelId))
+        sendbirdChannelService.deleteGroupChannel(channelId)
 
         return ResponseEntity<String>("channel deleted successfully", HttpStatus.OK)
     }
