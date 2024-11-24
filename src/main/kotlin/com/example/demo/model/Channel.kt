@@ -21,10 +21,6 @@ data class Channel(
     @Column(nullable = false)
     val name: String,
 
-    @OneToMany(mappedBy = "channel", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
-    @JsonManagedReference
-    val chats: MutableList<Chat> = mutableListOf(),
-
     @OneToMany(mappedBy = "channel", cascade = [CascadeType.ALL], orphanRemoval = true, fetch = FetchType.LAZY)
     @JsonManagedReference
     val channelDevices: MutableList<ChannelDevice> = mutableListOf()
