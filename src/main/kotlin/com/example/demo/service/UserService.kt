@@ -6,8 +6,7 @@ import com.example.demo.dto.user.UserDTO
 import com.example.demo.exception.UserNotFoundException
 import com.example.demo.model.User
 import com.example.demo.repository.UserRepository
-import org.springframework.http.HttpStatus
-import org.springframework.http.ResponseEntity
+
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.util.*

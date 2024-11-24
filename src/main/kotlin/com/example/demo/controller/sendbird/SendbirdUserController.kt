@@ -3,6 +3,7 @@ package com.example.demo.controller.sendbird
 import com.example.demo.dto.sendbird.SendbirdUserCreateRequest
 import com.example.demo.dto.sendbird.SendbirdUserCreateResponse
 import com.example.demo.service.sendbird.SendbirdUserService
+
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 

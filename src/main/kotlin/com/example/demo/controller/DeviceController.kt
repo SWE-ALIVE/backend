@@ -7,6 +7,7 @@ import com.example.demo.model.Device
 import com.example.demo.service.DeviceService
 import com.example.demo.service.UserService
 import com.example.demo.service.sendbird.SendbirdUserService
+
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*

@@ -1,8 +1,7 @@
 package com.example.demo.service
 
-import com.example.demo.dto.channel.ChannelDeviceDTO
 import com.example.demo.dto.channel.ChannelResponseDTO
-import com.example.demo.dto.channel.CreateChannelRequest
+import com.example.demo.dto.channel.CreateChannelRequestDTO
 import com.example.demo.dto.user.UserInviteRequestDTO
 import com.example.demo.model.Channel
 import com.example.demo.model.Device
@@ -12,10 +11,10 @@ import com.example.demo.repository.ChannelRepository
 import com.example.demo.repository.DeviceRepository
 import com.example.demo.repository.UserRepository
 import com.example.demo.service.sendbird.SendbirdChannelService
+
 import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
 import java.util.*
-import kotlin.NoSuchElementException
 
 @Service
 class ChannelService(
@@ -26,7 +25,7 @@ class ChannelService(
     private val sendbirdChannelService: SendbirdChannelService
 ) {
     @Transactional
-    fun createChannel(request: CreateChannelRequest): Channel {
+    fun createChannel(request: CreateChannelRequestDTO): Channel {
         val user = userRepository.findById(UUID.fromString(request.operatorIds.first()))
             .orElseThrow { IllegalArgumentException("User with ID ${request.operatorIds.first()} not found") }
 

@@ -15,7 +15,6 @@ data class Device(
     val id: UUID,
 
     @Column(nullable = false)
-    @JsonProperty("device_name")
     val name: String,
 
     @Column(nullable = false)

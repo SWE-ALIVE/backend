@@ -2,6 +2,7 @@ package com.example.demo.dto.user
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies
 import com.fasterxml.jackson.databind.annotation.JsonNaming
+
 import java.time.LocalDate
 
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy::class)

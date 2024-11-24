@@ -1,13 +1,21 @@
 package com.example.demo.service
 
-import com.example.demo.dto.*
+import com.example.demo.dto.ActionDTO
+import com.example.demo.dto.UserDeviceResponseDTO
 import com.example.demo.dto.channel.ChannelDTO
-import com.example.demo.dto.device.*
+import com.example.demo.dto.device.DeviceCreateRequestDTO
+import com.example.demo.dto.device.DeviceStatusRequestDTO
+import com.example.demo.dto.device.DeviceUsageRequestDTO
+import com.example.demo.dto.device.DeviceUsageResponseDTO
 import com.example.demo.exception.DeviceNotFoundInChannelException
 import com.example.demo.exception.UserNotFoundException
 import com.example.demo.model.Device
 import com.example.demo.model.User
-import com.example.demo.repository.*
+import com.example.demo.repository.ChannelDeviceRepository
+import com.example.demo.repository.DeviceRepository
+import com.example.demo.repository.DeviceUsageRecordRepository
+import com.example.demo.repository.UserDeviceRepository
+
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.util.*
@@ -65,12 +73,12 @@ class DeviceService(
 
     fun getDeviceUsageRecords(request: DeviceUsageRequestDTO): DeviceUsageResponseDTO {
 
-        val userDeviceId = userDeviceRepository.findUserDeviceByUserIdAndDeviceId(request.userId, request.deviceId)
+        val userDevice = userDeviceRepository.findUserDeviceByUserIdAndDeviceId(request.userId, request.deviceId)
 
-        val records = deviceUsageRecordRepository.findByUserDeviceId(userDeviceId.id)
+        val records = deviceUsageRecordRepository.findByUserDeviceId(userDevice.id)
 
         if (records.isEmpty()) {
-            throw NoSuchElementException("No records found for userDeviceId: ${userDeviceId.id}")
+            throw NoSuchElementException("No records found for userDeviceId: ${userDevice.id}")
         }
 
         val device = records.first().userDevice.device
