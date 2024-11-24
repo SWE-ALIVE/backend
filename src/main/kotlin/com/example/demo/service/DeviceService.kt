@@ -99,9 +99,8 @@ class DeviceService(
         val actions = records.map { record ->
             ActionDTO(
                 actionDescription = record.actionDescription,
-                usageDate = record.usageDate,
-                startTime = record.startTime.toLocalTime(),
-                endTime = record.endTime.toLocalTime()
+                startTime = record.startTime,
+                endTime = record.endTime
             )
         }
 

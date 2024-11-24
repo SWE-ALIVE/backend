@@ -29,7 +29,6 @@ class DeviceUsageRecordService(
         val record = DeviceUsageRecord(
             id = UUID.randomUUID(),
             userDevice = userDevice,
-            usageDate = now.toLocalDate(),
             actionDescription = request.actionDescription,
             startTime = startTime,
             endTime = now
