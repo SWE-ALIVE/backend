@@ -1,6 +1,7 @@
 package com.example.demo.service
 
 import com.example.demo.dto.LoginRequestDTO
+import com.example.demo.dto.user.UserCreateRequestDTO
 import com.example.demo.dto.user.UserDTO
 import com.example.demo.exception.UserNotFoundException
 import com.example.demo.model.User
@@ -30,19 +31,21 @@ class UserService(private val userRepository: UserRepository) {
     }
 
     @Transactional
-    fun createUser(request: User): UserDTO {
-        val user = userRepository.save(request)
-        return UserDTO(
-            id = user.id,
-            name = user.name,
-            birthDate = user.birthDate,
-            phoneNumber = user.phoneNumber
+    fun createUser(request: UserCreateRequestDTO): User {
+        val user = User(
+            id = UUID.randomUUID(),
+            name = request.name,
+            password = request.password,
+            birthDate = request.birthDate,
+            phoneNumber = request.phoneNumber
         )
+
+        return userRepository.save(user)
     }
 
     @Transactional
     fun deleteUser(id: UUID) {
-        if(!userRepository.existsById(id)) {
+        if (!userRepository.existsById(id)) {
             throw UserNotFoundException("User with id $id not found")
         }
         userRepository.deleteById(id)

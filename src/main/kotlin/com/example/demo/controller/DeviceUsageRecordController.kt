@@ -32,7 +32,7 @@ class DeviceUsageRecordController(
     fun getDeviceUsageRecords(
         @RequestBody request: DeviceUsageRequestDTO
     ): ResponseEntity<DeviceUsageResponseDTO> {
-        // 서비스에서 DeviceUsageResponseDTO를 가져옵니다.
+
         return ResponseEntity(deviceService.getDeviceUsageRecords(request), HttpStatus.OK)
     }
 }
