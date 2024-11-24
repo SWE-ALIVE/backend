@@ -54,7 +54,8 @@ class DeviceService(
             UserDeviceResponseDTO(
                 category = userDevice.device.category.name,
                 deviceId = userDevice.device.id,
-                deviceName = userDevice.device.name // 이부분은 닉네임으로 바뀔 수도 있음.
+                name = userDevice.device.name,
+                nickname = userDevice.device.nickname
             )
         }
     }
@@ -98,9 +99,8 @@ class DeviceService(
         val actions = records.map { record ->
             ActionDTO(
                 actionDescription = record.actionDescription,
-                usageDate = record.usageDate,
-                startTime = record.startTime.toLocalTime(),
-                endTime = record.endTime.toLocalTime()
+                startTime = record.startTime,
+                endTime = record.endTime
             )
         }
 

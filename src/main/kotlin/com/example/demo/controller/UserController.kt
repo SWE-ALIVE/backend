@@ -18,7 +18,6 @@ class UserController(
     private val userService: UserService,
     private val sendbirdUserService: SendbirdUserService
 ) {
-
     @PostMapping("/signup")
     fun createUser(@RequestBody request: UserCreateRequestDTO): ResponseEntity<User> {
         val user = userService.createUser(request)

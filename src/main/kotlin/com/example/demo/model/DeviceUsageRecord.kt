@@ -22,10 +22,6 @@ data class DeviceUsageRecord(
     val userDevice: UserDevice,
 
     @Column(nullable = false)
-    @JsonProperty("usage_date")
-    val usageDate: LocalDate,
-
-    @Column(nullable = false)
     @JsonProperty("action_description")
     val actionDescription: String,
 

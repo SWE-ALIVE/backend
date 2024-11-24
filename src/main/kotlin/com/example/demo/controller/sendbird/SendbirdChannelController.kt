@@ -11,20 +11,12 @@ import org.springframework.web.bind.annotation.*
 class SendbirdChannelController(
     private val sendbirdChannelService: SendbirdChannelService
 ) {
-
     @GetMapping
     fun getGroupChannelsByUserId(
         @RequestParam userId: String
     ): ResponseEntity<String> {
         return sendbirdChannelService.getGroupChannelsByUserId(userId)
     }
-
-//    @PostMapping
-//    fun createGroupChannel(
-//        @RequestBody sendbirdChannelCreateRequest: SendbirdChannelCreateRequest
-//    ): ResponseEntity<String> {
-//        return sendbirdChannelService.createGroupChannel(sendbirdChannelCreateRequest)
-//    }
 
     @DeleteMapping
     fun deleteGroupChannel(
@@ -42,12 +34,4 @@ class SendbirdChannelController(
             sendbirdUserInviteRequest.userIds
         )
     }
-
-//    @GetMapping("/{channelUrl}/users")
-//    fun getUsersInChannel(
-//        @PathVariable channelUrl: String
-//    ): ResponseEntity<String> {
-//        return sendbirdChannelService.getUsersInChannel(channelUrl)
-//    }
-
 }

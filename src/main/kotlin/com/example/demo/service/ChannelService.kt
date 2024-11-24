@@ -6,12 +6,10 @@ import com.example.demo.dto.user.UserInviteRequestDTO
 import com.example.demo.model.Channel
 import com.example.demo.model.Device
 import com.example.demo.model.User
-import com.example.demo.repository.ChannelDeviceRepository
 import com.example.demo.repository.ChannelRepository
 import com.example.demo.repository.DeviceRepository
 import com.example.demo.repository.UserRepository
 import com.example.demo.service.sendbird.SendbirdChannelService
-
 import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
 import java.util.*
@@ -21,7 +19,6 @@ class ChannelService(
     private val channelRepository: ChannelRepository,
     private val userRepository: UserRepository,
     private val deviceRepository: DeviceRepository,
-    private val channelDeviceRepository: ChannelDeviceRepository,
     private val sendbirdChannelService: SendbirdChannelService
 ) {
     @Transactional

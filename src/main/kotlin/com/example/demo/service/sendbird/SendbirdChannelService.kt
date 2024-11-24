@@ -73,7 +73,8 @@ class SendbirdChannelService(
                 else ChannelDeviceDTO(
                     id = deviceId,
                     name = member["nickname"].asText(),
-                    category = category
+                    category = category,
+                    nickname = member["nickname"].asText() // 값이 안가져와짐
                 )
             }
         } else {

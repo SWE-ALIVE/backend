@@ -6,8 +6,9 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy::class)
 data class ChannelDeviceDTO(
     val id: String,
-    val name: String,
     val category: String?,
+    val name: String,
+    val nickname: String,
     var deviceStatus: Boolean? = true
 )
 

@@ -44,7 +44,6 @@ class ChannelController(
     fun getUserChannels(@PathVariable userId: String): ResponseEntity<List<ChannelResponseDTO>> {
         // 유저 정보 가져오기
         val user = userService.getUser(UUID.fromString(userId))
-
         return ResponseEntity(channelService.getChannelsWithDevices(user), HttpStatus.OK)
     }
 
