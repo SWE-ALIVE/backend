@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController
 class SendbirdMessageController(
     private val sendbirdMessageService: SendbirdMessageService
 ) {
-
     // 채널에 메시지 보내기
     @PostMapping
     fun sendMessagesToChannel(

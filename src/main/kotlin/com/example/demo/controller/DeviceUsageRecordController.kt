@@ -19,7 +19,6 @@ class DeviceUsageRecordController(
     private val deviceService: DeviceService,
     private val deviceUsageRecordService: DeviceUsageRecordService
 ) {
-
     @PostMapping("/add")
     fun addDeviceUsageRecord(
         @RequestBody request: DeviceUsageCreateDTO

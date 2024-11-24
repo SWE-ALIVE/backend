@@ -12,14 +12,11 @@ import org.springframework.web.bind.annotation.*
 class SendbirdUserController(
     private val sendbirdUserService: SendbirdUserService
 ) {
-
-    // 완료
     @GetMapping
     fun getUsers(): ResponseEntity<String> {
         return sendbirdUserService.getUsers()
     }
 
-    // 완료
     @PostMapping
     fun createUser(
         @RequestBody sendbirdUserCreateRequest: SendbirdUserCreateRequest
@@ -30,7 +27,6 @@ class SendbirdUserController(
             sendbirdUserCreateRequest.profileUrl
         )
     }
-
 
     @DeleteMapping("/{userId}")
     fun deleteUser(
