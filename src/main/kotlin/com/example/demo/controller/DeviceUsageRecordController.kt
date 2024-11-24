@@ -32,7 +32,6 @@ class DeviceUsageRecordController(
     fun getDeviceUsageRecords(
         @RequestBody request: DeviceUsageRequestDTO
     ): ResponseEntity<DeviceUsageResponseDTO> {
-
         return ResponseEntity(deviceService.getDeviceUsageRecords(request), HttpStatus.OK)
     }
 }

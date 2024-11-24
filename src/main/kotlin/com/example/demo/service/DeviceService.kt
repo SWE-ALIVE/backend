@@ -73,7 +73,6 @@ class DeviceService(
             throw NoSuchElementException("No records found for userDeviceId: ${userDeviceId.id}")
         }
 
-        // 기기 가져오기
         val device = records.first().userDevice.device
 
         // 사용자와 기기를 기준으로 채팅방 필터링
@@ -82,7 +81,8 @@ class DeviceService(
             .map { channelDevice ->
                 ChannelDTO(
                     channelName = channelDevice.channel.name,
-                    channelDevices = channelDevice.channel.channelDevices.map { it.device.productNumber }
+                    channelId = channelDevice.channel.id.toString(),
+                    channelDevices = channelDevice.channel.channelDevices.map { it.device.nickname }
                 )
             }
 
@@ -97,7 +97,7 @@ class DeviceService(
         }
 
         val response = DeviceUsageResponseDTO(
-            deviceName = device.category.name,
+            name = device.category.name,
             channels = channels,
             actions = actions
         )
