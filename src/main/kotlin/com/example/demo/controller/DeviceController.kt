@@ -23,7 +23,7 @@ class DeviceController(
     @PostMapping
     fun createDevice(@RequestBody request: DeviceCreateRequestDTO): ResponseEntity<Device> {
         val device = deviceService.createDevice(request)
-        sendbirdUserService.createUser(device.id.toString(), request.name, "")
+        sendbirdUserService.createUser(device.id.toString(), request.nickname, "")
 
         return ResponseEntity(device, HttpStatus.CREATED)
     }
