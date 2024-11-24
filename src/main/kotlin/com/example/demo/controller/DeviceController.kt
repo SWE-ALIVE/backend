@@ -2,11 +2,12 @@ package com.example.demo.controller
 
 import com.example.demo.dto.device.DeviceCreateRequestDTO
 import com.example.demo.dto.device.DeviceStatusRequestDTO
-import com.example.demo.dto.UserDeviceDTO
+import com.example.demo.dto.UserDeviceResponseDTO
 import com.example.demo.model.Device
 import com.example.demo.service.DeviceService
 import com.example.demo.service.UserService
 import com.example.demo.service.sendbird.SendbirdUserService
+
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -31,31 +32,23 @@ class DeviceController(
     fun deleteDevice(
         @PathVariable deviceId: UUID
     ): ResponseEntity<String> {
-        sendbirdUserService.deleteUser(deviceId.toString())
         deviceService.deleteDevice(deviceId)
+        sendbirdUserService.deleteUser(deviceId.toString())
 
         return ResponseEntity<String>("Device deleted successfully", HttpStatus.OK)
     }
 
     @GetMapping("/users/{userId}")
-    fun getUserDevices(@PathVariable userId: UUID): ResponseEntity<List<UserDeviceDTO>> {
+    fun getUserDevices(@PathVariable userId: UUID): ResponseEntity<List<UserDeviceResponseDTO>> {
+        val user = userService.getUser(userId)
+        val userDevices = deviceService.getUserDevices(user)
 
-        val user = userService.getUser(userId)  // 유저 조회 (UserNotFoundException 예외 발생 가능)
-
-        // 유저가 존재하면 해당 유저의 userDevices 정보를 가져와서 반환
-        return user.userDevices.map { userDevice ->
-            // UserDevice를 통해 DeviceDTO로 변환
-            UserDeviceDTO(
-                category = userDevice.device.category.name,  // DeviceCategory의 이름
-                deviceId = userDevice.device.id,  // Device의 ID
-                deviceName = userDevice.device.productNumber // 장치 이름
-            )
-        }.let { ResponseEntity(it, HttpStatus.OK) }
+        return ResponseEntity(userDevices, HttpStatus.OK)
     }
 
     @PatchMapping("/status")
     fun updateDeviceStatus(@RequestBody request: DeviceStatusRequestDTO): ResponseEntity<String> {
-        deviceService.updateDeviceStatus(request.channelId, request.deviceId, request.deviceStatus)
+        deviceService.updateDeviceStatus(request)
         return ResponseEntity("Device status updated successfully", HttpStatus.OK)
     }
 

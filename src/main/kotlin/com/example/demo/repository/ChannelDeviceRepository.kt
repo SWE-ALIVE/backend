@@ -6,6 +6,4 @@ import java.util.*
 
 interface ChannelDeviceRepository : JpaRepository<ChannelDevice, UUID> {
     fun findByChannelIdAndDeviceId(channelId: UUID, deviceId: UUID): ChannelDevice?
-
-    fun findByChannelId(channelId: UUID): List<ChannelDevice>
 }

@@ -3,6 +3,7 @@ package com.example.demo.controller.sendbird
 import com.example.demo.dto.sendbird.QueryMessagesRequest
 import com.example.demo.dto.sendbird.SendMessageRequest
 import com.example.demo.service.sendbird.SendbirdMessageService
+
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody

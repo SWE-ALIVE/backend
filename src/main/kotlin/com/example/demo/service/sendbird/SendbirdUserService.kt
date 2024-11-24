@@ -2,7 +2,6 @@ package com.example.demo.service.sendbird
 
 import com.example.demo.dto.sendbird.SendbirdUserCreateResponse
 import com.example.demo.util.SendbirdApiHelper
-import org.slf4j.LoggerFactory
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpMethod
 import org.springframework.http.ResponseEntity

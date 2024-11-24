@@ -5,5 +5,6 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming
 
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy::class)data class ChannelDTO(
     val channelName: String,
+    val channelId : String,
     val channelDevices: List<String>
 )

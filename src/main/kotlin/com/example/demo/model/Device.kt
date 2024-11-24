@@ -15,8 +15,10 @@ data class Device(
     val id: UUID,
 
     @Column(nullable = false)
-    @JsonProperty("product_number")
-    val productNumber: String,
+    val name: String,
+
+    @Column(nullable = false)
+    val nickname: String,
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

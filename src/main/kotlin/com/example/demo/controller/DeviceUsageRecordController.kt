@@ -5,6 +5,7 @@ import com.example.demo.dto.device.DeviceUsageRequestDTO
 import com.example.demo.dto.device.DeviceUsageResponseDTO
 import com.example.demo.service.DeviceService
 import com.example.demo.service.DeviceUsageRecordService
+
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
@@ -32,7 +33,6 @@ class DeviceUsageRecordController(
     fun getDeviceUsageRecords(
         @RequestBody request: DeviceUsageRequestDTO
     ): ResponseEntity<DeviceUsageResponseDTO> {
-
         return ResponseEntity(deviceService.getDeviceUsageRecords(request), HttpStatus.OK)
     }
 }

@@ -6,6 +6,7 @@ import com.example.demo.dto.user.UserDTO
 import com.example.demo.exception.UserNotFoundException
 import com.example.demo.model.User
 import com.example.demo.repository.UserRepository
+
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.util.*
@@ -51,8 +52,17 @@ class UserService(private val userRepository: UserRepository) {
         userRepository.deleteById(id)
     }
 
-    fun getAllUsers(): List<User> {
-        return userRepository.findAll()
+    fun getAllUsers(): List<UserDTO> {
+        val users = userRepository.findAll()
+
+        return users.map { user ->
+            UserDTO(
+                id = user.id,
+                name = user.name,
+                birthDate = user.birthDate,
+                phoneNumber = user.phoneNumber,
+            )
+        }
     }
 
     fun getUser(userId: UUID): User {

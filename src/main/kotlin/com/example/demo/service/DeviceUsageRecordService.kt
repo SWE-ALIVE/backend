@@ -3,11 +3,12 @@ package com.example.demo.service
 import com.example.demo.dto.device.DeviceUsageCreateDTO
 import com.example.demo.model.DeviceUsageRecord
 import com.example.demo.repository.DeviceUsageRecordRepository
-import kotlin.random.Random
 import com.example.demo.repository.UserDeviceRepository
+
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
 import java.util.*
+import kotlin.random.Random
 
 @Service
 class DeviceUsageRecordService(

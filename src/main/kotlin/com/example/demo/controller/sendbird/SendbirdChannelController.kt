@@ -1,8 +1,8 @@
 package com.example.demo.controller.sendbird
 
-import com.example.demo.dto.sendbird.SendbirdChannelCreateRequest
 import com.example.demo.dto.sendbird.SendbirdUserInviteRequest
 import com.example.demo.service.sendbird.SendbirdChannelService
+
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
