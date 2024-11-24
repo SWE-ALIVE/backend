@@ -9,5 +9,6 @@ import java.util.UUID
 data class UserDeviceResponseDTO (
     val category: String,
     val deviceId: UUID,
-    val deviceName: String
+    val name: String,
+    val nickname: String
 )
