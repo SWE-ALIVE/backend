@@ -7,7 +7,7 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming
 data class ChannelDeviceDTO(
     val id: String,
     val category: String?,
-    val name: String,
+    var name: String,
     val nickname: String,
     var deviceStatus: Boolean? = true
 )

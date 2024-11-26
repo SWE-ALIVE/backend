@@ -56,6 +56,7 @@ class ChannelService(
             val devices = sendbirdChannelService.getUsersInChannel(channel.id.toString())
             devices.forEach { device ->
                 val channelDevice = channel.channelDevices.find { it.device.id == UUID.fromString(device.id) }
+                device.name = channelDevice?.device?.name ?: device.name
                 device.deviceStatus = channelDevice?.deviceStatus
             }
             ChannelResponseDTO(channel.id.toString(), channel.name, devices)
