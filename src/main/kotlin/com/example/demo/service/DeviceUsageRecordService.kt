@@ -4,9 +4,9 @@ import com.example.demo.dto.device.DeviceUsageCreateDTO
 import com.example.demo.model.DeviceUsageRecord
 import com.example.demo.repository.DeviceUsageRecordRepository
 import com.example.demo.repository.UserDeviceRepository
-
 import org.springframework.stereotype.Service
-import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.ZonedDateTime
 import java.util.*
 import kotlin.random.Random
 
@@ -21,8 +21,8 @@ class DeviceUsageRecordService(
             UUID.fromString(request.userId),
             UUID.fromString(request.deviceId)
         )
-        
-        val now = LocalDateTime.now()
+        val koreaZoneId = ZoneId.of("Asia/Seoul")
+        val now = ZonedDateTime.now(koreaZoneId).toLocalDateTime()
         val randomMinutes = Random.nextInt(1, 60)
         val startTime = now.minusMinutes(randomMinutes.toLong())
 
