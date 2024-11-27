@@ -13,7 +13,7 @@ data class Channel(
     @GeneratedValue(strategy = GenerationType.AUTO)
     val id: UUID,
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     @JsonBackReference
     val user: User,
@@ -24,7 +24,8 @@ data class Channel(
     @OneToMany(mappedBy = "channel", cascade = [CascadeType.ALL], orphanRemoval = true, fetch = FetchType.LAZY)
     @JsonManagedReference
     val channelDevices: MutableList<ChannelDevice> = mutableListOf()
-) {
+)
+{
     fun addDevice(device: Device) {
         val channelDevice = ChannelDevice(
             id = UUID.randomUUID(),

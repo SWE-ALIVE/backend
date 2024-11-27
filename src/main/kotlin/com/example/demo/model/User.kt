@@ -43,11 +43,11 @@ data class User(
     @JsonProperty("created_at")
     val createdAt: LocalDateTime = now(),
 
-    @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL])
+    @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL], orphanRemoval = true)
     @JsonManagedReference // 순환 참조의 시작
     val userDevices: MutableList<UserDevice> = mutableListOf(),
 
-    @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL])
+    @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL], orphanRemoval = true)
     @JsonManagedReference // 순환 참조의 시작
     val channels: MutableList<Channel> = mutableListOf()
 )
