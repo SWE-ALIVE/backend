@@ -27,7 +27,7 @@ class ChannelController(
         val channel = channelService.createChannel(request)
         sendbirdChannelService.createGroupChannel(request, channel.id.toString())
 
-        return ResponseEntity(HttpStatus.CREATED)
+        return ResponseEntity(channel, HttpStatus.CREATED)
     }
 
     @DeleteMapping
