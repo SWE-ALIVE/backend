@@ -32,11 +32,11 @@ data class Device(
     @JsonProperty("created_at")
     val createdAt: LocalDateTime = LocalDateTime.now(),
 
-    @OneToMany(mappedBy = "device", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "device", cascade = [CascadeType.REMOVE], orphanRemoval = true, fetch = FetchType.LAZY)
     @JsonManagedReference
-    val userDevices: MutableList<UserDevice> = mutableListOf(),
+    val channelDevices: MutableList<ChannelDevice> = mutableListOf(),
 
-    @OneToMany(mappedBy = "device", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "device", cascade = [CascadeType.REMOVE], orphanRemoval = true, fetch = FetchType.LAZY)
     @JsonManagedReference
-    val channelDevices: MutableList<ChannelDevice> = mutableListOf()
+    val userDevices: MutableList<UserDevice> = mutableListOf()
 )

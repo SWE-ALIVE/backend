@@ -10,7 +10,7 @@ import java.util.*
 @Table(
     name = "channel_device",
     uniqueConstraints = [
-        UniqueConstraint(columnNames = ["channel_id", "device_id"])  // channel_id와 device_id의 유니크 제약 추가
+        UniqueConstraint(columnNames = ["channel_id", "device_id"])
     ]
 )
 data class ChannelDevice(
@@ -18,12 +18,12 @@ data class ChannelDevice(
     @GeneratedValue
     val id: UUID = UUID.randomUUID(),
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "channel_id", nullable = false)
     @JsonBackReference
     val channel: Channel,
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "device_id", nullable = false)
     @JsonBackReference
     val device: Device,
