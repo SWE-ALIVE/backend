@@ -44,10 +44,9 @@ class ChannelService(
 
     @Transactional
     fun deleteChannel(id: UUID) {
-        if (!channelRepository.existsById(id)) {
-            throw NoSuchElementException("Channel with ID $id not found")
-        }
-        channelRepository.deleteById(id)
+        val channel = channelRepository.findById(id)
+            .orElseThrow { NoSuchElementException("Channel with ID $id not found") }
+        channelRepository.delete(channel)
     }
 
     fun getChannelsWithDevices(user: User): List<ChannelResponseDTO> {
