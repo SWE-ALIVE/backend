@@ -14,7 +14,7 @@ data class Channel(
     val id: UUID,
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id")
     @JsonBackReference
     val user: User,
 
