@@ -33,7 +33,8 @@ class SendbirdChannelService(
             "name" to request.name,
             "channel_url" to channelId,
             "user_ids" to request.deviceIds,
-            "operator_ids" to request.operatorIds
+            "operator_ids" to request.operatorIds,
+            "cover_url" to "https://res.cloudinary.com/dvhm5zqi5/image/upload/v1731955612/rounded-lg_dmw0sr.png"
         )
         val entity = HttpEntity(body, apiHelper.getHeaders())
         return restTemplate.postForEntity(url, entity, String::class.java)
