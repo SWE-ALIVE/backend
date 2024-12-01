@@ -1,7 +1,7 @@
 package com.example.demo.controller
 
-import com.example.demo.dto.sendbird.AIMessageRequest
-import com.example.demo.dto.sendbird.AIMessageResponse
+import com.example.demo.dto.ai.AIMessageRequest
+import com.example.demo.dto.ai.AIMessageResponse
 import com.example.demo.service.MessageService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity

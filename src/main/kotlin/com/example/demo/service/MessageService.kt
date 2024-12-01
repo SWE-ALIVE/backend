@@ -1,9 +1,9 @@
 package com.example.demo.service
 
 import com.example.demo.config.AIServerConfig
-import com.example.demo.dto.sendbird.AIMessageRequest
-import com.example.demo.dto.sendbird.AIMessageResponse
-import com.example.demo.util.SendbirdApiHelper
+import com.example.demo.dto.ai.AIMessageRequest
+import com.example.demo.dto.ai.AIMessageResponse
+import com.example.demo.util.ApiHelper
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpMethod
@@ -15,7 +15,7 @@ import org.springframework.web.util.UriComponentsBuilder
 @Service
 class MessageService(
     private val restTemplate: RestTemplate,
-    private val apiHelper: SendbirdApiHelper,
+    private val apiHelper: ApiHelper,
     private val aiServerConfig: AIServerConfig
 ) {
     private val logger = LoggerFactory.getLogger(MessageService::class.java)

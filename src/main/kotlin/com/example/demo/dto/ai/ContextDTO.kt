@@ -1,4 +1,4 @@
-package com.example.demo.dto.sendbird
+package com.example.demo.dto.ai
 
 data class ContextDTO(
     val domain: String,

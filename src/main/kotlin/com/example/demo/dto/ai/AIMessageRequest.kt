@@ -1,8 +1,7 @@
-package com.example.demo.dto.sendbird
+package com.example.demo.dto.ai
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies
 import com.fasterxml.jackson.databind.annotation.JsonNaming
-import org.hibernate.validator.constraints.URL
 
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy::class)
 data class AIMessageRequest(

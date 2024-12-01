@@ -1,11 +1,10 @@
-package com.example.demo.dto.sendbird
+package com.example.demo.dto.channel
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies
 import com.fasterxml.jackson.databind.annotation.JsonNaming
 
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy::class)
-data class QueryMessagesRequest(
+data class InviteUserRequest(
     val channelUrl: String,
-    val messageTs: String,
-    val limit: Int
+    val userIds: List<String>
 )

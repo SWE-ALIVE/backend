@@ -4,7 +4,7 @@ import com.example.demo.dto.user.UserCreateRequestDTO
 import com.example.demo.dto.user.UserDTO
 import com.example.demo.model.User
 import com.example.demo.service.UserService
-import com.example.demo.service.sendbird.SendbirdUserService
+import com.example.demo.service.DialogUserService
 
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -16,7 +16,7 @@ import java.util.*
 @RequestMapping("/v1")
 class UserController(
     private val userService: UserService,
-    private val sendbirdUserService: SendbirdUserService
+    private val sendbirdUserService: DialogUserService
 ) {
     @PostMapping("/signup")
     fun createUser(@RequestBody request: UserCreateRequestDTO): ResponseEntity<User> {

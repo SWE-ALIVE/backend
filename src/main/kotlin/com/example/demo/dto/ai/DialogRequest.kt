@@ -1,4 +1,4 @@
-package com.example.demo.dto.sendbird
+package com.example.demo.dto.ai
 
 data class DialogRequest(
     val sys: List<String>, // 최근 기기의 채팅
