@@ -8,12 +8,12 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 @RestController
-@RequestMapping("/v1/sendbird/ai")
+@RequestMapping("/v1/ai")
 class AIMessageController(
     private val messageService: MessageService
 ) {
     @PostMapping("/messages")
-    fun sendAIMessage(
+    suspend fun sendAIMessage(
         @RequestBody request: AIMessageRequest
     ): ResponseEntity<AIMessageResponse> {
         val response = messageService.processAIMessage(request)
