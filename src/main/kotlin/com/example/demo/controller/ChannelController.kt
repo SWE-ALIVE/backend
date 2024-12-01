@@ -6,7 +6,7 @@ import com.example.demo.dto.user.UserInviteRequestDTO
 import com.example.demo.model.Channel
 import com.example.demo.service.ChannelService
 import com.example.demo.service.UserService
-import com.example.demo.service.sendbird.SendbirdChannelService
+import com.example.demo.service.DialogChannelService
 
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -17,7 +17,7 @@ import java.util.*
 @RequestMapping("/v1/channels")
 class ChannelController(
     private val userService: UserService,
-    private val sendbirdChannelService: SendbirdChannelService,
+    private val sendbirdChannelService: DialogChannelService,
     private val channelService: ChannelService
 ) {
     @PostMapping
@@ -40,7 +40,7 @@ class ChannelController(
         return ResponseEntity<String>("channel deleted successfully", HttpStatus.OK)
     }
 
-    @GetMapping("/{userId}")
+    @GetMapping("/users/{userId}")
     fun getUserChannels(@PathVariable userId: String): ResponseEntity<List<ChannelResponseDTO>> {
         // 유저 정보 가져오기
         val user = userService.getUser(UUID.fromString(userId))
@@ -55,5 +55,12 @@ class ChannelController(
         sendbirdChannelService.addUsersToChannel(request.channelId, request.deviceIds)
 
         return ResponseEntity("Contributors added successfully", HttpStatus.OK)
+    }
+
+    @GetMapping("/users/{userId}/details")
+    fun getGroupChannelsByUserId(
+        @PathVariable userId: String
+    ): ResponseEntity<String> {
+        return sendbirdChannelService.getGroupChannelsByUserId(userId)
     }
 }

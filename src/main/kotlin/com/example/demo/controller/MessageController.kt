@@ -1,8 +1,8 @@
-package com.example.demo.controller.sendbird
+package com.example.demo.controller
 
-import com.example.demo.dto.sendbird.QueryMessagesRequest
-import com.example.demo.dto.sendbird.SendMessageRequest
-import com.example.demo.service.sendbird.SendbirdMessageService
+import com.example.demo.dto.channel.QueryMessagesRequest
+import com.example.demo.dto.channel.SendMessageRequest
+import com.example.demo.service.MessageService
 
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
@@ -12,15 +12,15 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/v1/sendbird/messages")
-class SendbirdMessageController(
-    private val sendbirdMessageService: SendbirdMessageService
+class MessageController(
+    private val messageService: MessageService
 ) {
     // 채널에 메시지 보내기
     @PostMapping
     fun sendMessagesToChannel(
         @RequestBody request: SendMessageRequest
     ): ResponseEntity<String> {
-        return sendbirdMessageService.sendMessagesToChannel(
+        return messageService.sendMessagesToChannel(
             request.channelUrl,
             request.userId,
             request.message
@@ -32,7 +32,7 @@ class SendbirdMessageController(
     fun queryMessagesFromChannel(
         @RequestBody request: QueryMessagesRequest
     ): ResponseEntity<String> {
-        return sendbirdMessageService.queryMessagesFromChannel(
+        return messageService.queryMessagesFromChannel(
             request.channelUrl,
             request.messageTs,
             request.limit

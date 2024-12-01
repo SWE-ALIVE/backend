@@ -1,12 +1,12 @@
 package com.example.demo.util
 
-import com.example.demo.config.SendbirdConfig
+import com.example.demo.config.DialogConfig
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Component
 
 @Component
-class SendbirdApiHelper(private val sendbirdConfig: SendbirdConfig) {
+class ApiHelper(private val sendbirdConfig: DialogConfig) {
     fun getHeaders(): HttpHeaders {
         return HttpHeaders().apply {
             add("Api-Token", sendbirdConfig.apiKey)

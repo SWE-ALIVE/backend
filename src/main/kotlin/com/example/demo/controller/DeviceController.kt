@@ -6,7 +6,7 @@ import com.example.demo.dto.device.DeviceStatusRequestDTO
 import com.example.demo.model.Device
 import com.example.demo.service.DeviceService
 import com.example.demo.service.UserService
-import com.example.demo.service.sendbird.SendbirdUserService
+import com.example.demo.service.DialogUserService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -17,7 +17,7 @@ import java.util.*
 class DeviceController(
     private val deviceService: DeviceService,
     private val userService: UserService,
-    private val sendbirdUserService: SendbirdUserService
+    private val sendbirdUserService: DialogUserService
 ) {
     @PostMapping
     fun createDevice(@RequestBody request: DeviceCreateRequestDTO): ResponseEntity<Device> {

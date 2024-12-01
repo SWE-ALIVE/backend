@@ -10,5 +10,6 @@ enum class DeviceCategory {
     AIR_PURIFIER,         // 공기청정기
     OVEN,                 // 오븐
     KIMCHI_REFRIGERATOR,  // 김치냉장고
-    VACUUM_CLEANER        // 청소기
+    VACUUM_CLEANER,        // 진공청소기
+    ROBOT_CLEANER         // 로봇청소기
 }

@@ -1,10 +1,10 @@
-package com.example.demo.service.sendbird
+package com.example.demo.service
 
 import com.example.demo.dto.channel.ChannelDeviceDTO
 import com.example.demo.dto.channel.CreateChannelRequestDTO
 import com.example.demo.model.Device
 import com.example.demo.repository.DeviceRepository
-import com.example.demo.util.SendbirdApiHelper
+import com.example.demo.util.ApiHelper
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.http.HttpEntity
@@ -16,9 +16,9 @@ import org.springframework.web.client.RestTemplate
 import java.util.*
 
 @Service
-class SendbirdChannelService(
+class DialogChannelService(
     private val restTemplate: RestTemplate,
-    private val apiHelper: SendbirdApiHelper,
+    private val apiHelper: ApiHelper,
     private val deviceRepository: DeviceRepository
 ) {
     fun getGroupChannelsByUserId(userId: String): ResponseEntity<String> {

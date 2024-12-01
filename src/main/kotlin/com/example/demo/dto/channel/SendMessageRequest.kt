@@ -1,12 +1,11 @@
-package com.example.demo.dto.sendbird
+package com.example.demo.dto.channel
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies
 import com.fasterxml.jackson.databind.annotation.JsonNaming
 
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy::class)
-data class SendbirdUserCreateResponse(
+data class SendMessageRequest(
+    val channelUrl: String,
     val userId: String,
-    val nickname: String,
-    val profileUrl: String,
-    val isCreated: String
+    val message: String
 )

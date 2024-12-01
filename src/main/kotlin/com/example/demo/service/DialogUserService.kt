@@ -1,7 +1,7 @@
-package com.example.demo.service.sendbird
+package com.example.demo.service
 
-import com.example.demo.dto.sendbird.SendbirdUserCreateResponse
-import com.example.demo.util.SendbirdApiHelper
+import com.example.demo.dto.user.CreateUserResponse
+import com.example.demo.util.ApiHelper
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpMethod
 import org.springframework.http.ResponseEntity
@@ -9,9 +9,9 @@ import org.springframework.stereotype.Service
 import org.springframework.web.client.RestTemplate
 
 @Service
-class SendbirdUserService(
+class DialogUserService(
     private val restTemplate: RestTemplate,
-    private val apiHelper: SendbirdApiHelper
+    private val apiHelper: ApiHelper
 ) {
     fun getUsers(): ResponseEntity<String> {
         val url = apiHelper.buildUrl("users")
@@ -19,7 +19,7 @@ class SendbirdUserService(
         return restTemplate.exchange(url, HttpMethod.GET, request, String::class.java)
     }
 
-    fun createUser(userId: String, nickname: String, profileUrl: String): ResponseEntity<SendbirdUserCreateResponse> {
+    fun createUser(userId: String, nickname: String, profileUrl: String): ResponseEntity<CreateUserResponse> {
         val url = apiHelper.buildUrl("users")
         val body = mapOf(
             "user_id" to userId,
@@ -27,7 +27,7 @@ class SendbirdUserService(
             "profile_url" to profileUrl
         )
         val request = HttpEntity(body, apiHelper.getHeaders())
-        return restTemplate.postForEntity(url, request, SendbirdUserCreateResponse::class.java)
+        return restTemplate.postForEntity(url, request, CreateUserResponse::class.java)
     }
 
     fun deleteUser(userId: String): ResponseEntity<String> {
