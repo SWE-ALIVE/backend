@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming
 
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy::class)
 data class AIMessageResponse(
-    val sql: String,
-    val message: String,
+    val messages: List<MessageDTO>,
     val context: List<ContextDTO>
 )
