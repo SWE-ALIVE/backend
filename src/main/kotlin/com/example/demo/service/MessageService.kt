@@ -44,7 +44,7 @@ class MessageService(
      * Query messages from a Sendbird channel.
      */
     fun queryMessagesFromChannel(channelUrl: String, messageTs: String, limit: Int?): ResponseEntity<String> {
-        val validMessageTs = if (messageTs.isBlank()) System.currentTimeMillis().toString() else messageTs
+        val validMessageTs = messageTs.ifBlank { System.currentTimeMillis().toString() }
 
         val urlBuilder = UriComponentsBuilder.fromHttpUrl(apiHelper.buildUrl("group_channels/$channelUrl/messages"))
             .queryParam("message_ts", validMessageTs)
